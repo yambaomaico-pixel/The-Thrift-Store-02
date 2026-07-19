@@ -110,12 +110,14 @@ const Shop = () => {
         {loading ? (
           <div>Loading products...</div>
         ) : (
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))', gap: 'var(--spacing-6)' }}>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--spacing-6)' }}>
             {filteredProducts.map(product => (
-              <ProductCard key={product.id} product={product} />
+              <div key={product.id} style={{ width: '250px', flexGrow: 0, flexShrink: 0 }}>
+                <ProductCard product={product} />
+              </div>
             ))}
             {filteredProducts.length === 0 && (
-              <p style={{ gridColumn: '1 / -1', color: 'var(--color-text-secondary)' }}>No products match your filters.</p>
+              <p style={{ width: '100%', color: 'var(--color-text-secondary)' }}>No products match your filters.</p>
             )}
           </div>
         )}

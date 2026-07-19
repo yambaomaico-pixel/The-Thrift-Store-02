@@ -42,12 +42,14 @@ const Home = () => {
         {loading ? (
           <div style={{ textAlign: 'center', padding: 'var(--spacing-8)' }}>Loading products...</div>
         ) : (
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))', gap: 'var(--spacing-6)' }}>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--spacing-6)', justifyContent: 'center' }}>
             {products.map(product => (
-              <ProductCard key={product.id} product={product} />
+              <div key={product.id} style={{ width: '250px', flexGrow: 0, flexShrink: 0 }}>
+                <ProductCard product={product} />
+              </div>
             ))}
             {products.length === 0 && (
-              <p style={{ gridColumn: '1 / -1', textAlign: 'center', color: 'var(--color-text-secondary)' }}>No products found. Admin needs to add some!</p>
+              <p style={{ width: '100%', textAlign: 'center', color: 'var(--color-text-secondary)' }}>No products found. Admin needs to add some!</p>
             )}
           </div>
         )}
