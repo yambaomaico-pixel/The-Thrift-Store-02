@@ -1,0 +1,30 @@
+rules_version = '2';
+
+service firebase.storage {
+  match /b/{bucket}/o {
+    
+    // Function to check if user is logged in
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    // Since we can't easily check Firestore collections directly from Storage Rules without custom claims,
+    // and the app uses Firestore role field, we'll allow authenticated users to upload profile pictures,
+    // but we can't restrict product image uploads to admins ONLY via storage rules unless we use Custom Claims.
+    // For now, we allow any authenticated user to upload to the "products" folder, but only Admins 
+    // will have the UI and Firestore rules to actually link them to a product. 
+    // If you add custom claims later, you can update this to `if request.auth.token.role == 'admin'`.
+
+    // Profile Images
+    match /users/{userId}/{allPaths=**} {
+      allow read: if true;
+      allow write: if isAuthenticated() && request.auth.uid == userId;
+    }
+
+    // Product Images
+    match /products/{allPaths=**} {
+      allow read: if true;
+      allow write: if isAuthenticated();
+    }
+  }
+}

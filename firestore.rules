@@ -1,0 +1,61 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Function to check if user is logged in
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    // Function to check if user is an admin
+    // Note: We are using the 'role' field in the 'users' collection for Admin authorization.
+    function isAdmin() {
+      return isAuthenticated() && 
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
+    }
+
+    // Function to check if the user is accessing their own document
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    // USERS collection
+    match /users/{userId} {
+      // Anyone can read their own profile, Admins can read all
+      allow read: if isOwner(userId) || isAdmin();
+      // Users can create/update their own profile
+      allow create, update: if isOwner(userId);
+      // Only Admins can delete users
+      allow delete: if isAdmin();
+      
+      // CART subcollection
+      match /cart/{productId} {
+        allow read, write: if isOwner(userId);
+      }
+      
+      // WISHLIST subcollection
+      match /wishlist/{productId} {
+        allow read, write: if isOwner(userId);
+      }
+    }
+
+    // PRODUCTS collection
+    match /products/{productId} {
+      // Anyone can read products
+      allow read: if true;
+      // Only Admins can create, update, delete
+      allow write: if isAdmin();
+    }
+
+    // ORDERS collection
+    match /orders/{orderId} {
+      // Users can read their own orders, Admins can read all
+      allow read: if isAdmin() || (isAuthenticated() && resource.data.userId == request.auth.uid);
+      // Users can create an order, Admins can create too
+      allow create: if isAuthenticated() && request.resource.data.userId == request.auth.uid;
+      // Only Admins can update/delete orders (e.g. changing status)
+      allow update, delete: if isAdmin();
+    }
+  }
+}
