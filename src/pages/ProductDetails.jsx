@@ -71,15 +71,15 @@ const ProductDetails = () => {
 
   return (
     <div className="container" style={{ padding: 'var(--spacing-12) 0' }}>
-      <div className="flex flex-col md-flex-row" style={{ gap: 'var(--spacing-8)' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 'var(--spacing-8)' }}>
         
-        {/* Product Image Gallery (Simple for now) */}
-        <div style={{ flex: 1, display: 'flex', justifyContent: 'center' }}>
-          <div style={{ backgroundColor: 'var(--color-surface)', borderRadius: 'var(--radius-lg)', overflow: 'hidden', border: '1px solid var(--color-border)', aspectRatio: '3/4', width: '100%', maxWidth: '500px', maxHeight: '70vh' }}>
+        {/* Product Image Gallery */}
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'flex-start' }}>
+          <div style={{ width: '100%', maxWidth: '400px', position: 'relative', paddingBottom: '133.33%', backgroundColor: 'var(--color-surface)', borderRadius: 'var(--radius-lg)', overflow: 'hidden', border: '1px solid var(--color-border)' }}>
             <img 
               src={product.images?.[0] || 'https://via.placeholder.com/600x800?text=No+Image'} 
               alt={product.name}
-              style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+              style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', objectFit: 'cover' }}
             />
           </div>
         </div>
