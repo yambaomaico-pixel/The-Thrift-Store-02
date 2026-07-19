@@ -6,7 +6,6 @@ fetch('https://yambaomaico-pixel.github.io/The-Thrift-Store-02/')
     return fetch(jsUrl).then(r => r.text());
   })
   .then(js => {
-    console.log("Includes flexWrap?", js.includes('flexWrap'));
-    console.log("Includes 250px?", js.includes('250px'));
-    console.log("Includes auto-fill?", js.includes('auto-fill'));
+    console.log("Includes display:block for Link?", js.includes('display:"block"'));
+    console.log("Includes position:relative for Link?", js.includes('position:"relative"'));
   });
