@@ -16,6 +16,7 @@ const ManageProducts = () => {
   const [brand, setBrand] = useState('');
   const [condition, setCondition] = useState('Good');
   const [category, setCategory] = useState('T-Shirts');
+  const [imageUrl, setImageUrl] = useState('');
 
   const fetchProducts = async () => {
     try {
@@ -42,12 +43,12 @@ const ManageProducts = () => {
         condition,
         category,
         createdAt: new Date(),
-        images: [], // Placeholder
+        images: imageUrl ? [imageUrl] : [], // Use provided URL or empty array
         stock: 1,
         status: 'active'
       });
       setIsAdding(false);
-      setName(''); setPrice(''); setBrand('');
+      setName(''); setPrice(''); setBrand(''); setImageUrl('');
       fetchProducts();
     } catch (error) {
       console.error("Error adding product: ", error);
@@ -97,6 +98,10 @@ const ManageProducts = () => {
                     <option key={cond} value={cond}>{cond}</option>
                   ))}
                 </select>
+              </div>
+              
+              <div style={{ gridColumn: '1 / -1' }}>
+                <Input label="Image URL (paste link address here)" value={imageUrl} onChange={(e) => setImageUrl(e.target.value)} placeholder="https://..." />
               </div>
             </div>
             <Button type="submit" isLoading={loading} style={{ alignSelf: 'flex-start', marginTop: 'var(--spacing-2)' }}>Save Product</Button>
