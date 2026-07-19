@@ -12,6 +12,7 @@ fetch('https://yambaomaico-pixel.github.io/The-Thrift-Store-02/')
   })
   .then(js => {
     if (js) {
-      console.log("Includes css grid fix?", js.includes('gridTemplateColumns:"repeat(auto-fit, minmax(300px, 1fr))"'));
+      console.log("Includes 300px?", js.includes('300px'));
+      console.log("Includes 400px?", js.includes('400px'));
     }
   });

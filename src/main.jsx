@@ -27,6 +27,8 @@ class ErrorBoundary extends React.Component {
   }
 }
 
+console.log("Build timestamp:", Date.now());
+
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <ErrorBoundary>

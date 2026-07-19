@@ -71,10 +71,10 @@ const ProductDetails = () => {
 
   return (
     <div className="container" style={{ padding: 'var(--spacing-12) 0' }}>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 'var(--spacing-8)' }}>
+      <div style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap', gap: 'var(--spacing-8)' }}>
         
         {/* Product Image Gallery */}
-        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'flex-start' }}>
+        <div style={{ flex: '1 1 300px', display: 'flex', justifyContent: 'center', alignItems: 'flex-start' }}>
           <div style={{ width: '100%', maxWidth: '400px', position: 'relative', paddingBottom: '133.33%', backgroundColor: 'var(--color-surface)', borderRadius: 'var(--radius-lg)', overflow: 'hidden', border: '1px solid var(--color-border)' }}>
             <img 
               src={product.images?.[0] || 'https://via.placeholder.com/600x800?text=No+Image'} 
@@ -85,14 +85,14 @@ const ProductDetails = () => {
         </div>
 
         {/* Product Info */}
-        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 'var(--spacing-6)' }}>
+        <div style={{ flex: '1 1 300px', display: 'flex', flexDirection: 'column', gap: 'var(--spacing-6)' }}>
           <div>
             <p style={{ color: 'var(--color-text-secondary)', fontWeight: 600, marginBottom: 'var(--spacing-2)' }}>{product.brand}</p>
             <h1 style={{ fontSize: 'var(--font-size-3xl)', marginBottom: 'var(--spacing-2)' }}>{product.name}</h1>
             <p style={{ fontSize: 'var(--font-size-2xl)', fontWeight: 'bold', color: 'var(--color-accent)' }}>${product.price?.toFixed(2)}</p>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'auto 1fr', gap: 'var(--spacing-4)', fontSize: 'var(--font-size-sm)' }}>
+          <div style={{ display: 'flex', gap: 'var(--spacing-4)', fontSize: 'var(--font-size-sm)', flexWrap: 'wrap' }}>
             <span style={{ color: 'var(--color-text-secondary)' }}>Condition:</span>
             <span style={{ fontWeight: 500 }}>{product.condition}</span>
             <span style={{ color: 'var(--color-text-secondary)' }}>Category:</span>
