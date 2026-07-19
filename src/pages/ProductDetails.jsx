@@ -71,11 +71,11 @@ const ProductDetails = () => {
 
   return (
     <div className="container" style={{ padding: 'var(--spacing-12) 0' }}>
-      <div className="flex flex-col" style={{ gap: 'var(--spacing-8)', md: { flexDirection: 'row' } }}>
+      <div className="flex flex-col md-flex-row" style={{ gap: 'var(--spacing-8)' }}>
         
         {/* Product Image Gallery (Simple for now) */}
-        <div style={{ flex: 1 }}>
-          <div style={{ backgroundColor: 'var(--color-surface)', borderRadius: 'var(--radius-lg)', overflow: 'hidden', border: '1px solid var(--color-border)', aspectRatio: '3/4' }}>
+        <div style={{ flex: 1, display: 'flex', justifyContent: 'center' }}>
+          <div style={{ backgroundColor: 'var(--color-surface)', borderRadius: 'var(--radius-lg)', overflow: 'hidden', border: '1px solid var(--color-border)', aspectRatio: '3/4', width: '100%', maxWidth: '500px', maxHeight: '70vh' }}>
             <img 
               src={product.images?.[0] || 'https://via.placeholder.com/600x800?text=No+Image'} 
               alt={product.name}
