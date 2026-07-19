@@ -2,17 +2,11 @@ fetch('https://yambaomaico-pixel.github.io/The-Thrift-Store-02/')
   .then(r => r.text())
   .then(html => {
     const jsMatch = html.match(/src="(\/The-Thrift-Store-02\/assets\/index-[^\.]+\.js)"/);
-    if (!jsMatch) {
-      console.log("Could not find JS bundle");
-      return;
-    }
     const jsUrl = 'https://yambaomaico-pixel.github.io' + jsMatch[1];
-    console.log("Fetching", jsUrl);
     return fetch(jsUrl).then(r => r.text());
   })
   .then(js => {
-    if (js) {
-      console.log("Includes 300px?", js.includes('300px'));
-      console.log("Includes 400px?", js.includes('400px'));
-    }
+    console.log("Includes flexWrap?", js.includes('flexWrap'));
+    console.log("Includes 250px?", js.includes('250px'));
+    console.log("Includes auto-fill?", js.includes('auto-fill'));
   });

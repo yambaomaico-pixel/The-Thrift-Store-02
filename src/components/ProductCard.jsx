@@ -4,7 +4,7 @@ import Button from './ui/Button';
 const ProductCard = ({ product }) => {
   return (
     <div className="card flex flex-col h-full">
-      <Link to={`/product/${product.id}`} className="block relative" style={{ paddingTop: '133%', overflow: 'hidden' }}>
+      <Link to={`/product/${product.id}`} style={{ display: 'block', position: 'relative', paddingTop: '133%', overflow: 'hidden' }}>
         <img 
           src={product.images?.[0] || 'https://via.placeholder.com/300x400?text=No+Image'} 
           alt={product.name}
