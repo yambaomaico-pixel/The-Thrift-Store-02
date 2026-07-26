@@ -20,11 +20,16 @@ const Profile = () => {
       try {
         const q = query(
           collection(db, 'orders'),
-          where('userId', '==', currentUser.uid),
-          orderBy('createdAt', 'desc')
+          where('userId', '==', currentUser.uid)
         );
         const querySnapshot = await getDocs(q);
         const ordersData = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        // Sort on client side to avoid Firestore composite index requirement
+        ordersData.sort((a, b) => {
+          const dateA = a.createdAt?.toDate ? a.createdAt.toDate() : new Date(0);
+          const dateB = b.createdAt?.toDate ? b.createdAt.toDate() : new Date(0);
+          return dateB - dateA;
+        });
         setOrders(ordersData);
       } catch (err) {
         console.error("Error fetching orders:", err);
