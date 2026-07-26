@@ -1,4 +1,4 @@
-fetch('https://yambaomaico-pixel.github.io/The-Thrift-Store-02/')
+rfetch('https://yambaomaico-pixel.github.io/The-Thrift-Store-02/')
   .then(r => r.text())
   .then(html => {
     const jsMatch = html.match(/src="(\/The-Thrift-Store-02\/assets\/index-[^\.]+\.js)"/);
