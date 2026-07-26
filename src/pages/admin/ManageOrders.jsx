@@ -34,6 +34,31 @@ const ManageOrders = () => {
     }
   };
 
+  const handlePaymentStatusChange = async (orderId, newPaymentStatus) => {
+    try {
+      const updates = { paymentStatus: newPaymentStatus };
+      if (newPaymentStatus === 'Verified') {
+        updates.status = 'Processing';
+      }
+      
+      await updateDoc(doc(db, 'orders', orderId), updates);
+      
+      setOrders(orders.map(o => {
+        if (o.id === orderId) {
+          return { 
+            ...o, 
+            paymentStatus: newPaymentStatus,
+            ...(newPaymentStatus === 'Verified' ? { status: 'Processing' } : {})
+          };
+        }
+        return o;
+      }));
+    } catch (error) {
+      console.error("Error updating payment status:", error);
+      alert("Failed to update payment status.");
+    }
+  };
+
   const handleETAChange = async (orderId, newETA) => {
     try {
       await updateDoc(doc(db, 'orders', orderId), { estimatedArrival: newETA });
@@ -60,6 +85,7 @@ const ManageOrders = () => {
                 <th style={{ padding: 'var(--spacing-3)', fontWeight: 600 }}>Customer</th>
                 <th style={{ padding: 'var(--spacing-3)', fontWeight: 600 }}>Address</th>
                 <th style={{ padding: 'var(--spacing-3)', fontWeight: 600 }}>Payment</th>
+                <th style={{ padding: 'var(--spacing-3)', fontWeight: 600 }}>Payment Status</th>
                 <th style={{ padding: 'var(--spacing-3)', fontWeight: 600 }}>Total</th>
                 <th style={{ padding: 'var(--spacing-3)', fontWeight: 600 }}>Status</th>
                 <th style={{ padding: 'var(--spacing-3)', fontWeight: 600 }}>ETA (Days)</th>
@@ -82,6 +108,38 @@ const ManageOrders = () => {
                   </td>
                   <td style={{ padding: 'var(--spacing-3)' }}>
                     {order.paymentMethod}
+                    {order.paymentMethod === 'GCash' && (
+                      <div style={{ fontSize: 'var(--font-size-xs)', marginTop: '4px' }}>
+                        <div>Ref: {order.gcashReference}</div>
+                        {order.paymentReceiptUrl && (
+                          <a href={order.paymentReceiptUrl} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--color-accent)', textDecoration: 'underline' }}>
+                            View Receipt
+                          </a>
+                        )}
+                      </div>
+                    )}
+                  </td>
+                  <td style={{ padding: 'var(--spacing-3)' }}>
+                    {order.paymentMethod === 'GCash' ? (
+                      <select 
+                        value={order.paymentStatus || 'Pending Verification'} 
+                        onChange={(e) => handlePaymentStatusChange(order.id, e.target.value)}
+                        style={{ 
+                          padding: 'var(--spacing-1) var(--spacing-2)', 
+                          borderRadius: 'var(--radius-sm)',
+                          border: '1px solid var(--color-border)',
+                          backgroundColor: 'var(--color-bg)'
+                        }}
+                      >
+                        <option value="Pending Verification">Pending Verification</option>
+                        <option value="Verified">Verified</option>
+                        <option value="Rejected">Rejected</option>
+                      </select>
+                    ) : (
+                      <span style={{ fontSize: 'var(--font-size-sm)', color: 'var(--color-text-secondary)' }}>
+                        {order.paymentStatus || 'N/A'}
+                      </span>
+                    )}
                   </td>
                   <td style={{ padding: 'var(--spacing-3)', fontWeight: 'bold' }}>
                     ${order.totalAmount?.toFixed(2)}

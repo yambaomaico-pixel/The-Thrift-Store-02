@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { collection, getDocs, addDoc, deleteDoc, doc } from 'firebase/firestore';
-import { db } from '../lib/firebase';
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { db, storage } from '../lib/firebase';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import Input from '../components/ui/Input';
@@ -14,6 +15,9 @@ const Checkout = () => {
   const [placingOrder, setPlacingOrder] = useState(false);
 
   // Form state
+  const [paymentMethod, setPaymentMethod] = useState('COD');
+  const [receiptFile, setReceiptFile] = useState(null);
+  const [gcashReference, setGcashReference] = useState('');
   const [address, setAddress] = useState(currentUser?.address?.address || '');
   const [city, setCity] = useState(currentUser?.address?.city || '');
   const [zip, setZip] = useState(currentUser?.address?.zip || '');
@@ -43,6 +47,27 @@ const Checkout = () => {
     e.preventDefault();
     setPlacingOrder(true);
     try {
+      let paymentReceiptUrl = null;
+      let status = 'Pending';
+      let paymentStatus = 'N/A';
+
+      if (paymentMethod === 'GCash') {
+        if (!receiptFile || !gcashReference) {
+          alert('Please upload your GCash receipt and enter the reference number.');
+          setPlacingOrder(false);
+          return;
+        }
+
+        // Upload receipt to Firebase Storage
+        const fileExtension = receiptFile.name.split('.').pop();
+        const fileName = `${currentUser.uid}_${Date.now()}.${fileExtension}`;
+        const storageRef = ref(storage, `receipts/${currentUser.uid}/${fileName}`);
+        
+        await uploadBytes(storageRef, receiptFile);
+        paymentReceiptUrl = await getDownloadURL(storageRef);
+        paymentStatus = 'Pending Verification';
+      }
+
       // 1. Create order document
       const orderRef = await addDoc(collection(db, 'orders'), {
         userId: currentUser.uid,
@@ -52,8 +77,11 @@ const Checkout = () => {
         contactNumber: contact,
         totalAmount: total,
         shippingFee: shipping,
-        paymentMethod: 'COD',
-        status: 'Pending',
+        paymentMethod: paymentMethod,
+        gcashReference: gcashReference || null,
+        paymentReceiptUrl: paymentReceiptUrl,
+        paymentStatus: paymentStatus,
+        status: status,
         createdAt: new Date()
       });
 
@@ -92,11 +120,69 @@ const Checkout = () => {
               
               <div style={{ marginTop: 'var(--spacing-4)' }}>
                 <h3 style={{ fontSize: 'var(--font-size-base)', marginBottom: 'var(--spacing-2)' }}>Payment Method</h3>
-                <div style={{ padding: 'var(--spacing-3)', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-sm)', backgroundColor: 'var(--color-bg)' }}>
-                  <label className="flex items-center gap-2 cursor-pointer">
-                    <input type="radio" checked readOnly /> 
-                    <span>Cash on Delivery (COD)</span>
-                  </label>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--spacing-2)' }}>
+                  
+                  <div style={{ padding: 'var(--spacing-3)', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-sm)', backgroundColor: 'var(--color-bg)' }}>
+                    <label className="flex items-center gap-2 cursor-pointer">
+                      <input 
+                        type="radio" 
+                        name="paymentMethod" 
+                        value="COD" 
+                        checked={paymentMethod === 'COD'} 
+                        onChange={(e) => setPaymentMethod(e.target.value)} 
+                      /> 
+                      <span>Cash on Delivery (COD)</span>
+                    </label>
+                  </div>
+
+                  <div style={{ padding: 'var(--spacing-3)', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-sm)', backgroundColor: 'var(--color-bg)' }}>
+                    <label className="flex items-center gap-2 cursor-pointer">
+                      <input 
+                        type="radio" 
+                        name="paymentMethod" 
+                        value="GCash" 
+                        checked={paymentMethod === 'GCash'} 
+                        onChange={(e) => setPaymentMethod(e.target.value)} 
+                      /> 
+                      <span>GCash (Manual Verification)</span>
+                    </label>
+
+                    {paymentMethod === 'GCash' && (
+                      <div style={{ marginTop: 'var(--spacing-4)', padding: 'var(--spacing-4)', backgroundColor: 'var(--color-surface)', borderRadius: 'var(--radius-sm)' }}>
+                        <p style={{ fontSize: 'var(--font-size-sm)', marginBottom: 'var(--spacing-2)' }}>
+                          Please scan the QR code below using your GCash app and pay <strong>${total.toFixed(2)}</strong>.
+                        </p>
+                        
+                        <div style={{ textAlign: 'center', margin: 'var(--spacing-4) 0' }}>
+                          <img 
+                            src="/gcash-qr.png" 
+                            alt="GCash QR Code" 
+                            style={{ maxWidth: '200px', display: 'inline-block', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-md)' }}
+                            onError={(e) => { e.target.src = 'https://via.placeholder.com/200x300?text=GCash+QR+Code' }}
+                          />
+                        </div>
+
+                        <Input 
+                          label="GCash Reference Number" 
+                          value={gcashReference} 
+                          onChange={(e) => setGcashReference(e.target.value)} 
+                          required={paymentMethod === 'GCash'}
+                          placeholder="e.g. 1002394829302"
+                        />
+                        
+                        <div style={{ marginTop: 'var(--spacing-3)' }}>
+                          <label style={{ display: 'block', fontSize: 'var(--font-size-sm)', fontWeight: 500, marginBottom: 'var(--spacing-1)' }}>Upload Payment Receipt</label>
+                          <input 
+                            type="file" 
+                            accept="image/*" 
+                            onChange={(e) => setReceiptFile(e.target.files[0])} 
+                            required={paymentMethod === 'GCash'}
+                            style={{ width: '100%', fontSize: 'var(--font-size-sm)' }}
+                          />
+                        </div>
+                      </div>
+                    )}
+                  </div>
                 </div>
               </div>
             </form>

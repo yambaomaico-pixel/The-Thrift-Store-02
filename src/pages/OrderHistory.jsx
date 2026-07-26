@@ -54,6 +54,24 @@ const OrderHistory = () => {
                 <div>
                   <p style={{ fontSize: 'var(--font-size-sm)', color: 'var(--color-text-secondary)' }}>Order ID: {order.id}</p>
                   <p style={{ fontWeight: 500 }}>Placed on {new Date(order.createdAt?.seconds * 1000).toLocaleDateString()}</p>
+                  <div style={{ marginTop: 'var(--spacing-2)', fontSize: 'var(--font-size-sm)' }}>
+                    <span style={{ color: 'var(--color-text-secondary)' }}>Payment: </span> 
+                    <strong>{order.paymentMethod || 'COD'}</strong>
+                    {order.paymentMethod === 'GCash' && (
+                      <span style={{ 
+                        marginLeft: 'var(--spacing-2)', 
+                        display: 'inline-block', 
+                        padding: '2px 8px', 
+                        backgroundColor: order.paymentStatus === 'Verified' ? '#10b981' : order.paymentStatus === 'Rejected' ? '#ef4444' : '#f59e0b', 
+                        color: 'white', 
+                        borderRadius: 'var(--radius-full)', 
+                        fontSize: '10px', 
+                        fontWeight: 600 
+                      }}>
+                        {order.paymentStatus || 'Pending Verification'}
+                      </span>
+                    )}
+                  </div>
                 </div>
                 <div style={{ textAlign: 'right' }}>
                   <p style={{ fontSize: 'var(--font-size-lg)', fontWeight: 'bold' }}>${order.totalAmount.toFixed(2)}</p>
