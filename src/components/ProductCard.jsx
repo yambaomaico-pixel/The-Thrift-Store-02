@@ -31,8 +31,8 @@ const ProductCard = ({ product }) => {
           quantity: 1,
           addedAt: new Date()
         });
-      }
-      alert("Added to cart!");
+      // alert("Added to cart!");
+      navigate('/cart');
     } catch (error) {
       console.error("Error adding to cart:", error);
       alert("Failed to add to cart.");
