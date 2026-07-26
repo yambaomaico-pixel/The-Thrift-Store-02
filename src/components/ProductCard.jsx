@@ -15,11 +15,11 @@ const ProductCard = ({ product }) => {
       navigate('/login');
       return;
     }
-    
+
     try {
       const cartRef = doc(db, `users/${currentUser.uid}/cart`, product.id);
       const cartSnap = await getDoc(cartRef);
-      
+
       if (cartSnap.exists()) {
         const currentQty = cartSnap.data().quantity || 1;
         await setDoc(cartRef, { quantity: currentQty + 1 }, { merge: true });
@@ -32,8 +32,7 @@ const ProductCard = ({ product }) => {
           addedAt: new Date()
         });
       }
-      // alert("Added to cart!");
-      navigate('/cart');
+      alert("Added to cart!");
     } catch (error) {
       console.error("Error adding to cart:", error);
       alert("Failed to add to cart.");
@@ -43,8 +42,8 @@ const ProductCard = ({ product }) => {
   return (
     <div className="card flex flex-col h-full">
       <Link to={`/product/${product.id}`} style={{ display: 'block', position: 'relative', paddingTop: '133%', overflow: 'hidden' }}>
-        <img 
-          src={product.images?.[0] || 'https://via.placeholder.com/300x400?text=No+Image'} 
+        <img
+          src={product.images?.[0] || 'https://via.placeholder.com/300x400?text=No+Image'}
           alt={product.name}
           style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', objectFit: 'cover' }}
         />
