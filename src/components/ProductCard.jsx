@@ -4,6 +4,8 @@ import { useAuth } from '../context/AuthContext';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
 import { db } from '../lib/firebase';
 
+import { toast } from 'react-hot-toast';
+
 const ProductCard = ({ product }) => {
   const { currentUser } = useAuth();
   const navigate = useNavigate();
@@ -11,7 +13,7 @@ const ProductCard = ({ product }) => {
   const handleAddToCart = async (e) => {
     e.preventDefault();
     if (!currentUser) {
-      alert("Please log in to add items to cart.");
+      toast.error("Please log in to add items to cart.");
       navigate('/login');
       return;
     }
@@ -32,10 +34,16 @@ const ProductCard = ({ product }) => {
           addedAt: new Date()
         });
       }
-      alert("Added to cart!");
+      toast.success(`${product.name} added to cart!`, {
+        style: {
+          borderRadius: '10px',
+          background: '#333',
+          color: '#fff',
+        },
+      });
     } catch (error) {
       console.error("Error adding to cart:", error);
-      alert("Failed to add to cart.");
+      toast.error("Failed to add to cart.");
     }
   };
 

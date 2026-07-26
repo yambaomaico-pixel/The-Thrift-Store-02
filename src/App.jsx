@@ -16,11 +16,14 @@ import { AuthProvider } from './context/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute';
 import AdminRoute from './components/AdminRoute';
 
+import { Toaster } from 'react-hot-toast';
+
 function App() {
   return (
     <AuthProvider>
       <Router>
         <div className="flex flex-col h-full" style={{ minHeight: '100vh' }}>
+          <Toaster position="bottom-right" />
           <Navbar />
           <main className="flex-1">
             <Routes>
