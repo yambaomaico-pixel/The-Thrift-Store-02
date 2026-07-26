@@ -34,6 +34,17 @@ const ManageOrders = () => {
     }
   };
 
+  const handleETAChange = async (orderId, newETA) => {
+    try {
+      await updateDoc(doc(db, 'orders', orderId), { estimatedArrival: newETA });
+      setOrders(orders.map(o => o.id === orderId ? { ...o, estimatedArrival: newETA } : o));
+    } catch (error) {
+      console.error("Error updating ETA:", error);
+      alert("Failed to update ETA.");
+    }
+  };
+
+
   return (
     <AdminLayout title="Manage Orders">
       <div className="card" style={{ padding: 'var(--spacing-6)', overflowX: 'auto' }}>
@@ -51,6 +62,7 @@ const ManageOrders = () => {
                 <th style={{ padding: 'var(--spacing-3)', fontWeight: 600 }}>Payment</th>
                 <th style={{ padding: 'var(--spacing-3)', fontWeight: 600 }}>Total</th>
                 <th style={{ padding: 'var(--spacing-3)', fontWeight: 600 }}>Status</th>
+                <th style={{ padding: 'var(--spacing-3)', fontWeight: 600 }}>ETA (Days)</th>
               </tr>
             </thead>
             <tbody>
@@ -91,6 +103,25 @@ const ManageOrders = () => {
                       <option value="Delivered">Delivered</option>
                       <option value="Cancelled">Cancelled</option>
                     </select>
+                  </td>
+                  <td style={{ padding: 'var(--spacing-3)' }}>
+                    <input 
+                      type="text" 
+                      placeholder="e.g. 3 days"
+                      defaultValue={order.estimatedArrival || ''}
+                      onBlur={(e) => {
+                        if (e.target.value !== order.estimatedArrival) {
+                          handleETAChange(order.id, e.target.value);
+                        }
+                      }}
+                      style={{ 
+                        padding: 'var(--spacing-1) var(--spacing-2)', 
+                        borderRadius: 'var(--radius-sm)',
+                        border: '1px solid var(--color-border)',
+                        backgroundColor: 'var(--color-bg)',
+                        width: '80px'
+                      }}
+                    />
                   </td>
                 </tr>
               ))}
