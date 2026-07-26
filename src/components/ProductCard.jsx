@@ -31,6 +31,7 @@ const ProductCard = ({ product }) => {
           quantity: 1,
           addedAt: new Date()
         });
+      }
       // alert("Added to cart!");
       navigate('/cart');
     } catch (error) {
