@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { collection, query, where, getDocs, orderBy } from 'firebase/firestore';
+import { collection, query, where, getDocs, doc, updateDoc } from 'firebase/firestore';
 import { db } from '../lib/firebase';
 import { useAuth } from '../context/AuthContext';
 import { Link } from 'react-router-dom';
@@ -12,6 +12,14 @@ const Profile = () => {
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [addressLoading, setAddressLoading] = useState(false);
+  const [addressMsg, setAddressMsg] = useState('');
+  
+  // Shipping details state
+  const [address, setAddress] = useState(currentUser?.address?.address || '');
+  const [city, setCity] = useState(currentUser?.address?.city || '');
+  const [zip, setZip] = useState(currentUser?.address?.zip || '');
+  const [contact, setContact] = useState(currentUser?.phone || '');
   const [orders, setOrders] = useState([]);
   const [ordersLoading, setOrdersLoading] = useState(true);
 
@@ -60,6 +68,26 @@ const Profile = () => {
     }
   };
 
+  const handleUpdateShipping = async (e) => {
+    e.preventDefault();
+    setAddressLoading(true);
+    setAddressMsg('');
+    try {
+      const userRef = doc(db, 'users', currentUser.uid);
+      await updateDoc(userRef, {
+        phone: contact,
+        address: { address, city, zip }
+      });
+      // Optionally update currentUser in context if needed, but context reloads on refresh
+      setAddressMsg('Shipping details updated successfully.');
+    } catch (err) {
+      console.error(err);
+      setAddressMsg('Failed to update shipping details.');
+    } finally {
+      setAddressLoading(false);
+    }
+  };
+
   if (!currentUser) return null;
 
   return (
@@ -84,6 +112,24 @@ const Profile = () => {
                 <p style={{ fontWeight: 500, textTransform: 'capitalize' }}>{currentUser.role}</p>
               </div>
             </div>
+          </div>
+
+          <div className="card" style={{ padding: 'var(--spacing-6)' }}>
+            <h2 style={{ fontSize: 'var(--font-size-lg)', marginBottom: 'var(--spacing-4)' }}>Shipping Details</h2>
+            {addressMsg && (
+              <div style={{ backgroundColor: addressMsg.includes('Failed') ? 'var(--color-error)' : 'var(--color-success)', color: 'white', padding: 'var(--spacing-2)', borderRadius: 'var(--radius-sm)', marginBottom: 'var(--spacing-4)', fontSize: 'var(--font-size-sm)' }}>
+                {addressMsg}
+              </div>
+            )}
+            <form onSubmit={handleUpdateShipping} className="flex flex-col gap-4">
+              <Input label="Street Address" value={address} onChange={(e) => setAddress(e.target.value)} />
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--spacing-4)' }}>
+                <Input label="City" value={city} onChange={(e) => setCity(e.target.value)} />
+                <Input label="ZIP / Postal Code" value={zip} onChange={(e) => setZip(e.target.value)} />
+              </div>
+              <Input label="Contact Number" type="tel" value={contact} onChange={(e) => setContact(e.target.value)} />
+              <Button type="submit" isLoading={addressLoading} style={{ alignSelf: 'flex-start' }}>Save Information</Button>
+            </form>
           </div>
 
           <div className="card" style={{ padding: 'var(--spacing-6)' }}>

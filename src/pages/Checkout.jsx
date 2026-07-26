@@ -14,10 +14,10 @@ const Checkout = () => {
   const [placingOrder, setPlacingOrder] = useState(false);
 
   // Form state
-  const [address, setAddress] = useState('');
-  const [city, setCity] = useState('');
-  const [zip, setZip] = useState('');
-  const [contact, setContact] = useState('');
+  const [address, setAddress] = useState(currentUser?.address?.address || '');
+  const [city, setCity] = useState(currentUser?.address?.city || '');
+  const [zip, setZip] = useState(currentUser?.address?.zip || '');
+  const [contact, setContact] = useState(currentUser?.phone || '');
 
   useEffect(() => {
     const fetchCart = async () => {

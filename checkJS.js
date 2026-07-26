@@ -7,8 +7,6 @@ fetch('https://yambaomaico-pixel.github.io/The-Thrift-Store-02/')
     return fetch(jsUrl).then(r => r.text());
   })
   .then(js => {
-    console.log("Includes 'getCountFromServer':", js.includes('getCountFromServer'));
-    console.log("Includes 'Total Customers':", js.includes('Total Customers'));
-    console.log("Includes '12,450':", js.includes('12,450'));
+    console.log("Includes orderBy('createdAt', 'desc'):", js.includes('orderBy("createdAt","desc")') || js.includes("orderBy('createdAt','desc')"));
   })
   .catch(e => console.error(e));
