@@ -155,7 +155,7 @@ const Checkout = () => {
                         
                         <div style={{ textAlign: 'center', margin: 'var(--spacing-4) 0' }}>
                           <img 
-                            src={`${import.meta.env.BASE_URL}gcash-qr.png`} 
+                            src={`${import.meta.env.BASE_URL}gcash-qr.png?v=2`} 
                             alt="GCash QR Code" 
                             style={{ maxWidth: '200px', display: 'inline-block', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-md)' }}
                             onError={(e) => { e.target.src = 'https://via.placeholder.com/200x300?text=GCash+QR+Code' }}
