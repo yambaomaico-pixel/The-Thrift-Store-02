@@ -12,6 +12,9 @@ const ProductCard = ({ product }) => {
 
   const handleAddToCart = async (e) => {
     e.preventDefault();
+    e.stopPropagation();
+    console.log("Add to cart button clicked for product:", product.id);
+    
     if (!currentUser) {
       toast.error("Please log in to add items to cart.");
       navigate('/login');
