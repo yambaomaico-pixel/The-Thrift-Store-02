@@ -1,7 +1,44 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Button from './ui/Button';
+import { useAuth } from '../context/AuthContext';
+import { doc, getDoc, setDoc } from 'firebase/firestore';
+import { db } from '../lib/firebase';
 
 const ProductCard = ({ product }) => {
+  const { currentUser } = useAuth();
+  const navigate = useNavigate();
+
+  const handleAddToCart = async (e) => {
+    e.preventDefault();
+    if (!currentUser) {
+      alert("Please log in to add items to cart.");
+      navigate('/login');
+      return;
+    }
+    
+    try {
+      const cartRef = doc(db, `users/${currentUser.uid}/cart`, product.id);
+      const cartSnap = await getDoc(cartRef);
+      
+      if (cartSnap.exists()) {
+        const currentQty = cartSnap.data().quantity || 1;
+        await setDoc(cartRef, { quantity: currentQty + 1 }, { merge: true });
+      } else {
+        await setDoc(cartRef, {
+          name: product.name,
+          price: product.price,
+          image: product.images?.[0] || 'https://via.placeholder.com/80',
+          quantity: 1,
+          addedAt: new Date()
+        });
+      }
+      alert("Added to cart!");
+    } catch (error) {
+      console.error("Error adding to cart:", error);
+      alert("Failed to add to cart.");
+    }
+  };
+
   return (
     <div className="card flex flex-col h-full">
       <Link to={`/product/${product.id}`} style={{ display: 'block', position: 'relative', paddingTop: '133%', overflow: 'hidden' }}>
@@ -21,7 +58,7 @@ const ProductCard = ({ product }) => {
         <p style={{ color: 'var(--color-text-secondary)', fontSize: 'var(--font-size-sm)', marginBottom: 'var(--spacing-4)', flex: 1 }}>
           {product.brand} &bull; {product.condition}
         </p>
-        <Button variant="primary" className="w-full">Add to Cart</Button>
+        <Button variant="primary" className="w-full" onClick={handleAddToCart}>Add to Cart</Button>
       </div>
     </div>
   );
