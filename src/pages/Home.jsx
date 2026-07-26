@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { collection, getDocs, query, limit, orderBy } from 'firebase/firestore';
 import { db } from '../lib/firebase';
 import ProductCard from '../components/ProductCard';
+import { Link } from 'react-router-dom';
 
 const Home = () => {
   const [products, setProducts] = useState([]);
@@ -31,7 +32,7 @@ const Home = () => {
         <div className="container">
           <h1 style={{ fontSize: 'var(--font-size-3xl)', marginBottom: 'var(--spacing-4)' }}>Discover Unique Sustainable Fashion</h1>
           <p style={{ fontSize: 'var(--font-size-lg)', opacity: 0.9, marginBottom: 'var(--spacing-8)' }}>Shop pre-loved styles and reduce your carbon footprint.</p>
-          <button className="btn btn-outline" style={{ color: 'white', borderColor: 'white' }}>Shop Now</button>
+          <Link to="/shop" className="btn btn-outline" style={{ display: 'inline-block', color: 'white', borderColor: 'white' }}>Shop Now</Link>
         </div>
       </section>
 
