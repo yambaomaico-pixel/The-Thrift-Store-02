@@ -60,6 +60,34 @@ const Profile = () => {
     return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
   };
 
+  const handleConfirmReceived = async (orderId) => {
+    try {
+      await updateDoc(doc(db, 'orders', orderId), {
+        status: 'Delivered',
+        deliveryConfirmed: true,
+        deliveredAt: new Date()
+      });
+      setOrders(orders.map(o => o.id === orderId ? { ...o, status: 'Delivered', deliveryConfirmed: true } : o));
+    } catch (error) {
+      console.error("Error confirming delivery:", error);
+      alert("Failed to confirm delivery.");
+    }
+  };
+
+  const handleReportNotReceived = async (orderId) => {
+    try {
+      await updateDoc(doc(db, 'orders', orderId), {
+        status: 'Parcel Has Arrived',
+        deliveryIssue: true,
+        issueStatus: 'Pending Review'
+      });
+      setOrders(orders.map(o => o.id === orderId ? { ...o, status: 'Parcel Has Arrived', deliveryIssue: true, issueStatus: 'Pending Review' } : o));
+    } catch (error) {
+      console.error("Error reporting issue:", error);
+      alert("Failed to report issue.");
+    }
+  };
+
   const handleUpdatePassword = async (e) => {
     e.preventDefault();
     if (!newPassword) return;
@@ -234,7 +262,7 @@ const Profile = () => {
                             </p>
                           ) : displayedStatus === 'Parcel Has Arrived' ? (
                             <p style={{ fontSize: 'var(--font-size-sm)', color: 'var(--color-accent)', marginTop: '2px', fontWeight: 'bold' }}>
-                              Your parcel has arrived! Please check your orders page to confirm.
+                              Your parcel has arrived!
                             </p>
                           ) : null}
                         </div>
@@ -243,12 +271,37 @@ const Profile = () => {
                           Waiting for admin to confirm estimated delivery date.
                         </p>
                       )}
-                      
-                      <div style={{ marginTop: 'var(--spacing-3)' }}>
-                        <Link to="/orders" style={{ fontSize: 'var(--font-size-sm)', color: 'var(--color-primary)', textDecoration: 'underline' }}>
-                          View Full Order History &rarr;
-                        </Link>
-                      </div>
+
+                      {/* Customer Confirmation Section */}
+                      {displayedStatus === 'Parcel Has Arrived' && !order.deliveryIssue && (
+                        <div style={{ marginTop: 'var(--spacing-3)' }}>
+                          <p style={{ fontSize: 'var(--font-size-sm)', marginBottom: 'var(--spacing-2)' }}>Please confirm you have received your order.</p>
+                          <div className="flex gap-2">
+                            <button 
+                              onClick={() => handleConfirmReceived(order.id)} 
+                              className="btn btn-primary"
+                              style={{ padding: '4px 8px', fontSize: 'var(--font-size-xs)' }}
+                            >
+                              Confirm Received
+                            </button>
+                            <button 
+                              onClick={() => handleReportNotReceived(order.id)} 
+                              className="btn btn-outline"
+                              style={{ borderColor: 'var(--color-danger)', color: 'var(--color-danger)', padding: '4px 8px', fontSize: 'var(--font-size-xs)' }}
+                            >
+                              Report Not Received
+                            </button>
+                          </div>
+                        </div>
+                      )}
+
+                      {order.deliveryIssue && (
+                        <div style={{ marginTop: 'var(--spacing-3)' }}>
+                          <p style={{ color: 'var(--color-danger)', fontWeight: 500, fontSize: 'var(--font-size-sm)' }}>
+                            Delivery issue reported. Status: {order.issueStatus}
+                          </p>
+                        </div>
+                      )}
                     </div>
                   </div>
                 )})}
