@@ -59,15 +59,28 @@ const ManageOrders = () => {
     }
   };
 
-  const handleETAChange = async (orderId, newETA) => {
+  const handleDeliveryDateChange = async (orderId, newDate) => {
     try {
-      await updateDoc(doc(db, 'orders', orderId), { estimatedArrival: newETA });
-      setOrders(orders.map(o => o.id === orderId ? { ...o, estimatedArrival: newETA } : o));
+      await updateDoc(doc(db, 'orders', orderId), { estimatedDeliveryDate: newDate });
+      setOrders(orders.map(o => o.id === orderId ? { ...o, estimatedDeliveryDate: newDate } : o));
     } catch (error) {
-      console.error("Error updating ETA:", error);
-      alert("Failed to update ETA.");
+      console.error("Error updating estimated delivery date:", error);
+      alert("Failed to update delivery date.");
     }
   };
+
+  const calculateETA = (deliveryDate) => {
+    if (!deliveryDate) return null;
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const targetDate = new Date(deliveryDate);
+    targetDate.setHours(0, 0, 0, 0);
+    const diffTime = targetDate - today;
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    return diffDays;
+  };
+
+  const todayStr = new Date().toISOString().split('T')[0];
 
 
   return (
@@ -88,14 +101,25 @@ const ManageOrders = () => {
                 <th style={{ padding: 'var(--spacing-3)', fontWeight: 600 }}>Payment Status</th>
                 <th style={{ padding: 'var(--spacing-3)', fontWeight: 600 }}>Total</th>
                 <th style={{ padding: 'var(--spacing-3)', fontWeight: 600 }}>Status</th>
-                <th style={{ padding: 'var(--spacing-3)', fontWeight: 600 }}>ETA (Days)</th>
+                <th style={{ padding: 'var(--spacing-3)', fontWeight: 600 }}>Est. Delivery</th>
               </tr>
             </thead>
             <tbody>
-              {orders.map(order => (
-                <tr key={order.id} style={{ borderBottom: '1px solid var(--color-border)' }}>
+              {orders.map(order => {
+                const etaDays = calculateETA(order.estimatedDeliveryDate);
+                const hasIssue = order.deliveryIssue && order.issueStatus === 'Pending Review';
+                return (
+                <tr key={order.id} style={{ 
+                  borderBottom: '1px solid var(--color-border)',
+                  backgroundColor: hasIssue ? 'rgba(239, 68, 68, 0.1)' : 'transparent' 
+                }}>
                   <td style={{ padding: 'var(--spacing-3)' }}>
                     {order.createdAt?.toDate ? order.createdAt.toDate().toLocaleDateString() : 'N/A'}
+                    {hasIssue && (
+                      <div style={{ color: 'var(--color-danger)', fontSize: 'var(--font-size-xs)', fontWeight: 'bold', marginTop: '4px' }}>
+                        Delivery Issue Reported
+                      </div>
+                    )}
                   </td>
                   <td style={{ padding: 'var(--spacing-3)' }}>
                     <div><strong>{order.customerName}</strong></div>
@@ -158,31 +182,36 @@ const ManageOrders = () => {
                       <option value="Pending">Pending</option>
                       <option value="Processing">Processing</option>
                       <option value="Shipped">Shipped</option>
+                      <option value="Parcel Has Arrived">Parcel Has Arrived</option>
                       <option value="Delivered">Delivered</option>
                       <option value="Cancelled">Cancelled</option>
                     </select>
                   </td>
                   <td style={{ padding: 'var(--spacing-3)' }}>
-                    <input 
-                      type="text" 
-                      placeholder="e.g. 3 days"
-                      defaultValue={order.estimatedArrival || ''}
-                      onBlur={(e) => {
-                        if (e.target.value !== order.estimatedArrival) {
-                          handleETAChange(order.id, e.target.value);
-                        }
-                      }}
-                      style={{ 
-                        padding: 'var(--spacing-1) var(--spacing-2)', 
-                        borderRadius: 'var(--radius-sm)',
-                        border: '1px solid var(--color-border)',
-                        backgroundColor: 'var(--color-bg)',
-                        width: '80px'
-                      }}
-                    />
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                      <input 
+                        type="date" 
+                        min={todayStr}
+                        value={order.estimatedDeliveryDate || ''}
+                        onChange={(e) => handleDeliveryDateChange(order.id, e.target.value)}
+                        style={{ 
+                          padding: 'var(--spacing-1) var(--spacing-2)', 
+                          borderRadius: 'var(--radius-sm)',
+                          border: '1px solid var(--color-border)',
+                          backgroundColor: 'var(--color-bg)',
+                          width: '130px'
+                        }}
+                      />
+                      {order.estimatedDeliveryDate && (
+                        <span style={{ fontSize: 'var(--font-size-xs)', color: 'var(--color-text-secondary)' }}>
+                          ETA: {etaDays !== null ? (etaDays > 0 ? `${etaDays} day(s)` : (etaDays === 0 ? 'Today' : 'Past Due')) : 'N/A'}
+                        </span>
+                      )}
+                    </div>
                   </td>
                 </tr>
-              ))}
+                );
+              })}
             </tbody>
           </table>
         )}

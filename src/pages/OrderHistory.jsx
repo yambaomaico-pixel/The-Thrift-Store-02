@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { collection, query, where, getDocs, orderBy } from 'firebase/firestore';
+import { collection, query, where, getDocs, orderBy, updateDoc, doc } from 'firebase/firestore';
 import { db } from '../lib/firebase';
 import { useAuth } from '../context/AuthContext';
 import { Link } from 'react-router-dom';
@@ -35,6 +35,44 @@ const OrderHistory = () => {
     }
   }, [currentUser]);
 
+  const calculateETA = (deliveryDate) => {
+    if (!deliveryDate) return null;
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const targetDate = new Date(deliveryDate);
+    targetDate.setHours(0, 0, 0, 0);
+    const diffTime = targetDate - today;
+    return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+  };
+
+  const handleConfirmReceived = async (orderId) => {
+    try {
+      await updateDoc(doc(db, 'orders', orderId), {
+        status: 'Delivered',
+        deliveryConfirmed: true,
+        deliveredAt: new Date()
+      });
+      setOrders(orders.map(o => o.id === orderId ? { ...o, status: 'Delivered', deliveryConfirmed: true } : o));
+    } catch (error) {
+      console.error("Error confirming delivery:", error);
+      alert("Failed to confirm delivery.");
+    }
+  };
+
+  const handleReportNotReceived = async (orderId) => {
+    try {
+      await updateDoc(doc(db, 'orders', orderId), {
+        status: 'Parcel Has Arrived',
+        deliveryIssue: true,
+        issueStatus: 'Pending Review'
+      });
+      setOrders(orders.map(o => o.id === orderId ? { ...o, status: 'Parcel Has Arrived', deliveryIssue: true, issueStatus: 'Pending Review' } : o));
+    } catch (error) {
+      console.error("Error reporting issue:", error);
+      alert("Failed to report issue.");
+    }
+  };
+
   if (loading) return <div className="container" style={{ padding: 'var(--spacing-8) 0', textAlign: 'center' }}>Loading orders...</div>;
 
   return (
@@ -48,12 +86,36 @@ const OrderHistory = () => {
         </div>
       ) : (
         <div className="flex flex-col gap-6">
-          {orders.map(order => (
+          {orders.map(order => {
+            const etaDays = calculateETA(order.estimatedDeliveryDate);
+            let displayedStatus = order.status;
+            
+            // Automatic Arrival Detection
+            if (order.status === 'Shipped' && etaDays !== null && etaDays <= 0) {
+              displayedStatus = 'Parcel Has Arrived';
+            }
+
+            return (
             <div key={order.id} className="card" style={{ padding: 'var(--spacing-6)' }}>
               <div className="flex justify-between items-center" style={{ borderBottom: '1px solid var(--color-border)', paddingBottom: 'var(--spacing-4)', marginBottom: 'var(--spacing-4)' }}>
                 <div>
                   <p style={{ fontSize: 'var(--font-size-sm)', color: 'var(--color-text-secondary)' }}>Order ID: {order.id}</p>
                   <p style={{ fontWeight: 500 }}>Placed on {new Date(order.createdAt?.seconds * 1000).toLocaleDateString()}</p>
+                  
+                  {order.estimatedDeliveryDate && (
+                    <div style={{ marginTop: 'var(--spacing-2)' }}>
+                      <p style={{ fontSize: 'var(--font-size-sm)' }}>
+                        <span style={{ color: 'var(--color-text-secondary)' }}>Estimated Delivery: </span>
+                        <strong>{new Date(order.estimatedDeliveryDate).toLocaleDateString()}</strong>
+                      </p>
+                      {etaDays > 0 && (
+                        <p style={{ fontSize: 'var(--font-size-sm)', color: 'var(--color-accent)' }}>
+                          ETA: {etaDays} day(s)
+                        </p>
+                      )}
+                    </div>
+                  )}
+
                   <div style={{ marginTop: 'var(--spacing-2)', fontSize: 'var(--font-size-sm)' }}>
                     <span style={{ color: 'var(--color-text-secondary)' }}>Payment: </span> 
                     <strong>{order.paymentMethod || 'COD'}</strong>
@@ -76,7 +138,7 @@ const OrderHistory = () => {
                 <div style={{ textAlign: 'right' }}>
                   <p style={{ fontSize: 'var(--font-size-lg)', fontWeight: 'bold' }}>${order.totalAmount.toFixed(2)}</p>
                   <span style={{ display: 'inline-block', padding: 'var(--spacing-1) var(--spacing-2)', backgroundColor: 'var(--color-bg)', borderRadius: 'var(--radius-full)', fontSize: 'var(--font-size-xs)', fontWeight: 500, color: 'var(--color-accent)', marginTop: 'var(--spacing-1)' }}>
-                    {order.status}
+                    {displayedStatus}
                   </span>
                 </div>
               </div>
@@ -92,8 +154,50 @@ const OrderHistory = () => {
                   </div>
                 ))}
               </div>
+
+              {/* Customer Confirmation Section */}
+              {displayedStatus === 'Parcel Has Arrived' && !order.deliveryIssue && (
+                <div style={{ 
+                  marginTop: 'var(--spacing-6)', 
+                  padding: 'var(--spacing-4)', 
+                  backgroundColor: 'var(--color-bg)', 
+                  borderRadius: 'var(--radius-md)', 
+                  border: '1px solid var(--color-border)' 
+                }}>
+                  <h4 style={{ marginBottom: 'var(--spacing-3)', fontWeight: 600 }}>Your parcel has arrived.</h4>
+                  <div className="flex gap-4">
+                    <button 
+                      onClick={() => handleConfirmReceived(order.id)} 
+                      className="btn btn-primary"
+                    >
+                      Confirm Received
+                    </button>
+                    <button 
+                      onClick={() => handleReportNotReceived(order.id)} 
+                      className="btn btn-outline"
+                      style={{ borderColor: 'var(--color-danger)', color: 'var(--color-danger)' }}
+                    >
+                      Report Not Received
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              {order.deliveryIssue && (
+                <div style={{ 
+                  marginTop: 'var(--spacing-6)', 
+                  padding: 'var(--spacing-4)', 
+                  backgroundColor: 'rgba(239, 68, 68, 0.1)', 
+                  borderRadius: 'var(--radius-md)', 
+                  border: '1px solid var(--color-danger)' 
+                }}>
+                  <p style={{ color: 'var(--color-danger)', fontWeight: 500 }}>
+                    Delivery issue reported. Status: {order.issueStatus}
+                  </p>
+                </div>
+              )}
             </div>
-          ))}
+          )})}
         </div>
       )}
     </div>
