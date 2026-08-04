@@ -50,6 +50,16 @@ const Profile = () => {
     }
   }, [currentUser]);
 
+  const calculateETA = (deliveryDate) => {
+    if (!deliveryDate) return null;
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const targetDate = new Date(deliveryDate);
+    targetDate.setHours(0, 0, 0, 0);
+    const diffTime = targetDate - today;
+    return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+  };
+
   const handleUpdatePassword = async (e) => {
     e.preventDefault();
     if (!newPassword) return;
@@ -165,7 +175,14 @@ const Profile = () => {
               </div>
             ) : (
               <div className="flex flex-col gap-4">
-                {orders.map(order => (
+                {orders.map(order => {
+                  const etaDays = calculateETA(order.estimatedDeliveryDate);
+                  let displayedStatus = order.status;
+                  if (order.status === 'Shipped' && etaDays !== null && etaDays <= 0) {
+                    displayedStatus = 'Parcel Has Arrived';
+                  }
+
+                  return (
                   <div key={order.id} style={{ border: '1px solid var(--color-border)', borderRadius: 'var(--radius-md)', padding: 'var(--spacing-4)' }}>
                     <div className="flex justify-between items-start" style={{ borderBottom: '1px solid var(--color-border)', paddingBottom: 'var(--spacing-2)', marginBottom: 'var(--spacing-3)' }}>
                       <div>
@@ -184,7 +201,7 @@ const Profile = () => {
                           fontWeight: 600, 
                           color: 'var(--color-accent)' 
                         }}>
-                          Status: {order.status}
+                          Status: {displayedStatus}
                         </span>
                       </div>
                     </div>
@@ -205,18 +222,36 @@ const Profile = () => {
 
                     <div style={{ backgroundColor: 'var(--color-bg)', padding: 'var(--spacing-3)', borderRadius: 'var(--radius-sm)' }}>
                       <p style={{ fontSize: 'var(--font-size-sm)', fontWeight: 600, marginBottom: 'var(--spacing-1)' }}>Delivery Update:</p>
-                      {order.estimatedArrival ? (
-                        <p style={{ fontSize: 'var(--font-size-sm)', color: 'var(--color-accent)' }}>
-                          <strong>ETA:</strong> Wait for {order.estimatedArrival} to arrive.
-                        </p>
+                      {order.estimatedDeliveryDate ? (
+                        <div>
+                          <p style={{ fontSize: 'var(--font-size-sm)' }}>
+                            <span style={{ color: 'var(--color-text-secondary)' }}>Est. Delivery: </span>
+                            <strong>{new Date(order.estimatedDeliveryDate).toLocaleDateString()}</strong>
+                          </p>
+                          {etaDays > 0 ? (
+                            <p style={{ fontSize: 'var(--font-size-sm)', color: 'var(--color-accent)', marginTop: '2px' }}>
+                              <strong>ETA:</strong> {etaDays} day(s)
+                            </p>
+                          ) : displayedStatus === 'Parcel Has Arrived' ? (
+                            <p style={{ fontSize: 'var(--font-size-sm)', color: 'var(--color-accent)', marginTop: '2px', fontWeight: 'bold' }}>
+                              Your parcel has arrived! Please check your orders page to confirm.
+                            </p>
+                          ) : null}
+                        </div>
                       ) : (
                         <p style={{ fontSize: 'var(--font-size-sm)', color: 'var(--color-text-secondary)' }}>
-                          Waiting for admin to confirm estimated arrival time.
+                          Waiting for admin to confirm estimated delivery date.
                         </p>
                       )}
+                      
+                      <div style={{ marginTop: 'var(--spacing-3)' }}>
+                        <Link to="/orders" style={{ fontSize: 'var(--font-size-sm)', color: 'var(--color-primary)', textDecoration: 'underline' }}>
+                          View Full Order History &rarr;
+                        </Link>
+                      </div>
                     </div>
                   </div>
-                ))}
+                )})}
               </div>
             )}
           </div>
