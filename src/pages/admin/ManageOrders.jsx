@@ -106,7 +106,8 @@ const ManageOrders = () => {
             </thead>
             <tbody>
               {orders.map(order => {
-                const etaDays = calculateETA(order.estimatedDeliveryDate);
+                const deliveryDate = order.estimatedDeliveryDate || order.estimatedArrival;
+                const etaDays = calculateETA(deliveryDate);
                 const hasIssue = order.deliveryIssue && order.issueStatus === 'Pending Review';
                 return (
                 <tr key={order.id} style={{ 
@@ -192,7 +193,7 @@ const ManageOrders = () => {
                       <input 
                         type="date" 
                         min={todayStr}
-                        value={order.estimatedDeliveryDate || ''}
+                        value={deliveryDate || ''}
                         onChange={(e) => handleDeliveryDateChange(order.id, e.target.value)}
                         style={{ 
                           padding: 'var(--spacing-1) var(--spacing-2)', 
@@ -202,7 +203,7 @@ const ManageOrders = () => {
                           width: '130px'
                         }}
                       />
-                      {order.estimatedDeliveryDate && (
+                      {deliveryDate && (
                         <span style={{ fontSize: 'var(--font-size-xs)', color: 'var(--color-text-secondary)' }}>
                           ETA: {etaDays !== null ? (etaDays > 0 ? `${etaDays} day(s)` : (etaDays === 0 ? 'Today' : 'Past Due')) : 'N/A'}
                         </span>

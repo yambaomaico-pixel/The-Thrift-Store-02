@@ -52,9 +52,11 @@ const Profile = () => {
 
   const calculateETA = (deliveryDate) => {
     if (!deliveryDate) return null;
+    const targetDate = new Date(deliveryDate);
+    if (isNaN(targetDate.getTime())) return null;
+    
     const today = new Date();
     today.setHours(0, 0, 0, 0);
-    const targetDate = new Date(deliveryDate);
     targetDate.setHours(0, 0, 0, 0);
     const diffTime = targetDate - today;
     return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
@@ -204,7 +206,8 @@ const Profile = () => {
             ) : (
               <div className="flex flex-col gap-4">
                 {orders.map(order => {
-                  const etaDays = calculateETA(order.estimatedDeliveryDate);
+                  const deliveryDate = order.estimatedDeliveryDate || order.estimatedArrival;
+                  const etaDays = calculateETA(deliveryDate);
                   let displayedStatus = order.status;
                   if (order.status === 'Shipped' && etaDays !== null && etaDays <= 0) {
                     displayedStatus = 'Parcel Has Arrived';
@@ -250,11 +253,13 @@ const Profile = () => {
 
                     <div style={{ backgroundColor: 'var(--color-bg)', padding: 'var(--spacing-3)', borderRadius: 'var(--radius-sm)' }}>
                       <p style={{ fontSize: 'var(--font-size-sm)', fontWeight: 600, marginBottom: 'var(--spacing-1)' }}>Delivery Update:</p>
-                      {order.estimatedDeliveryDate ? (
+                      {deliveryDate ? (
                         <div>
                           <p style={{ fontSize: 'var(--font-size-sm)' }}>
                             <span style={{ color: 'var(--color-text-secondary)' }}>Est. Delivery: </span>
-                            <strong>{new Date(order.estimatedDeliveryDate).toLocaleDateString()}</strong>
+                            <strong>
+                              {deliveryDate.includes('-') && deliveryDate.length === 10 ? new Date(deliveryDate).toLocaleDateString() : deliveryDate}
+                            </strong>
                           </p>
                           {etaDays > 0 ? (
                             <p style={{ fontSize: 'var(--font-size-sm)', color: 'var(--color-accent)', marginTop: '2px' }}>

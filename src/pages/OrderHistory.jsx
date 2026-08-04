@@ -37,9 +37,11 @@ const OrderHistory = () => {
 
   const calculateETA = (deliveryDate) => {
     if (!deliveryDate) return null;
+    const targetDate = new Date(deliveryDate);
+    if (isNaN(targetDate.getTime())) return null;
+    
     const today = new Date();
     today.setHours(0, 0, 0, 0);
-    const targetDate = new Date(deliveryDate);
     targetDate.setHours(0, 0, 0, 0);
     const diffTime = targetDate - today;
     return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
@@ -87,7 +89,8 @@ const OrderHistory = () => {
       ) : (
         <div className="flex flex-col gap-6">
           {orders.map(order => {
-            const etaDays = calculateETA(order.estimatedDeliveryDate);
+            const deliveryDate = order.estimatedDeliveryDate || order.estimatedArrival;
+            const etaDays = calculateETA(deliveryDate);
             let displayedStatus = order.status;
             
             // Automatic Arrival Detection
@@ -102,11 +105,11 @@ const OrderHistory = () => {
                   <p style={{ fontSize: 'var(--font-size-sm)', color: 'var(--color-text-secondary)' }}>Order ID: {order.id}</p>
                   <p style={{ fontWeight: 500 }}>Placed on {new Date(order.createdAt?.seconds * 1000).toLocaleDateString()}</p>
                   
-                  {order.estimatedDeliveryDate && (
+                  {deliveryDate && (
                     <div style={{ marginTop: 'var(--spacing-2)' }}>
                       <p style={{ fontSize: 'var(--font-size-sm)' }}>
                         <span style={{ color: 'var(--color-text-secondary)' }}>Estimated Delivery: </span>
-                        <strong>{new Date(order.estimatedDeliveryDate).toLocaleDateString()}</strong>
+                        <strong>{deliveryDate.includes('-') && deliveryDate.length === 10 ? new Date(deliveryDate).toLocaleDateString() : deliveryDate}</strong>
                       </p>
                       {etaDays > 0 && (
                         <p style={{ fontSize: 'var(--font-size-sm)', color: 'var(--color-accent)' }}>
