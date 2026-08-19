@@ -12,8 +12,8 @@ const PromotionalCarousel = () => {
   const touchStartX = useRef(0);
   const touchEndX = useRef(0);
   
-  // Auto-advance interval: 4-5 seconds
-  const autoRotateInterval = 4500;
+  // Auto-advance interval: 3 seconds
+  const autoRotateInterval = 3000;
 
   useEffect(() => {
     const fetchFeatured = async () => {
