@@ -3,6 +3,7 @@ import { collection, getDocs, query, limit, orderBy } from 'firebase/firestore';
 import { db } from '../lib/firebase';
 import ProductCard from '../components/ProductCard';
 import { Link } from 'react-router-dom';
+import PromotionalCarousel from '../components/PromotionalCarousel';
 
 const Home = () => {
   const [products, setProducts] = useState([]);
@@ -27,14 +28,7 @@ const Home = () => {
 
   return (
     <div>
-      {/* Hero Section */}
-      <section style={{ backgroundColor: 'var(--color-accent)', color: 'white', padding: 'var(--spacing-16) 0', textAlign: 'center' }}>
-        <div className="container">
-          <h1 style={{ fontSize: 'var(--font-size-3xl)', marginBottom: 'var(--spacing-4)' }}>Discover Unique Sustainable Fashion</h1>
-          <p style={{ fontSize: 'var(--font-size-lg)', opacity: 0.9, marginBottom: 'var(--spacing-8)' }}>Shop pre-loved styles and reduce your carbon footprint.</p>
-          <Link to="/shop" className="btn btn-outline" style={{ display: 'inline-block', color: 'white', borderColor: 'white' }}>Shop Now</Link>
-        </div>
-      </section>
+      <PromotionalCarousel />
 
       {/* Featured Products */}
       <section className="container" style={{ padding: 'var(--spacing-12) 0' }}>
