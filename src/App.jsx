@@ -13,6 +13,7 @@ import AdminDashboard from './pages/admin/Dashboard';
 import ManageProducts from './pages/admin/ManageProducts';
 import ManageOrders from './pages/admin/ManageOrders';
 import { AuthProvider } from './context/AuthContext';
+import { ThemeProvider } from './context/ThemeContext';
 import ProtectedRoute from './components/ProtectedRoute';
 import AdminRoute from './components/AdminRoute';
 
@@ -20,39 +21,41 @@ import { Toaster } from 'react-hot-toast';
 
 function App() {
   return (
-    <AuthProvider>
-      <Router>
-        <div className="flex flex-col h-full" style={{ minHeight: '100vh' }}>
-          <Toaster position="bottom-right" />
-          <Navbar />
-          <main className="flex-1">
-            <Routes>
-              {/* Public Routes */}
-              <Route path="/" element={<Home />} />
-              <Route path="/shop" element={<Shop />} />
-              <Route path="/product/:id" element={<ProductDetails />} />
-              <Route path="/login" element={<Login />} />
-              <Route path="/register" element={<Register />} />
-              
-              {/* Customer Protected Routes */}
-              <Route element={<ProtectedRoute />}>
-                <Route path="/cart" element={<Cart />} />
-                <Route path="/checkout" element={<Checkout />} />
-                <Route path="/profile" element={<Profile />} />
-                <Route path="/orders" element={<OrderHistory />} />
-              </Route>
+    <ThemeProvider>
+      <AuthProvider>
+        <Router>
+          <div className="flex flex-col h-full" style={{ minHeight: '100vh' }}>
+            <Toaster position="bottom-right" />
+            <Navbar />
+            <main className="flex-1">
+              <Routes>
+                {/* Public Routes */}
+                <Route path="/" element={<Home />} />
+                <Route path="/shop" element={<Shop />} />
+                <Route path="/product/:id" element={<ProductDetails />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/register" element={<Register />} />
+                
+                {/* Customer Protected Routes */}
+                <Route element={<ProtectedRoute />}>
+                  <Route path="/cart" element={<Cart />} />
+                  <Route path="/checkout" element={<Checkout />} />
+                  <Route path="/profile" element={<Profile />} />
+                  <Route path="/orders" element={<OrderHistory />} />
+                </Route>
 
-              {/* Admin Protected Routes */}
-              <Route element={<AdminRoute />}>
-                <Route path="/admin" element={<AdminDashboard />} />
-                <Route path="/admin/products" element={<ManageProducts />} />
-                <Route path="/admin/orders" element={<ManageOrders />} />
-              </Route>
-            </Routes>
-          </main>
-        </div>
-      </Router>
-    </AuthProvider>
+                {/* Admin Protected Routes */}
+                <Route element={<AdminRoute />}>
+                  <Route path="/admin" element={<AdminDashboard />} />
+                  <Route path="/admin/products" element={<ManageProducts />} />
+                  <Route path="/admin/orders" element={<ManageOrders />} />
+                </Route>
+              </Routes>
+            </main>
+          </div>
+        </Router>
+      </AuthProvider>
+    </ThemeProvider>
   );
 }
 

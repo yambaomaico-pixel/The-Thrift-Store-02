@@ -1,9 +1,12 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { useTheme } from '../context/ThemeContext';
 import Button from './ui/Button';
+import { FiSun, FiMoon } from 'react-icons/fi';
 
 const Navbar = () => {
   const { currentUser, logout } = useAuth();
+  const { theme, toggleTheme } = useTheme();
   const navigate = useNavigate();
 
   const handleLogout = async () => {
@@ -39,6 +42,23 @@ const Navbar = () => {
               </Link>
             </>
           )}
+          <button 
+            onClick={toggleTheme} 
+            style={{ 
+              display: 'flex', 
+              alignItems: 'center', 
+              justifyContent: 'center', 
+              padding: 'var(--spacing-2)', 
+              borderRadius: '50%',
+              backgroundColor: 'var(--color-surface)',
+              color: 'var(--color-text-primary)',
+              border: '1px solid var(--color-border)',
+              marginLeft: 'var(--spacing-2)'
+            }}
+            aria-label="Toggle Dark Mode"
+          >
+            {theme === 'dark' ? <FiSun size={18} /> : <FiMoon size={18} />}
+          </button>
         </div>
       </div>
     </nav>
