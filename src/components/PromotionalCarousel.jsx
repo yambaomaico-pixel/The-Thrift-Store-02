@@ -20,7 +20,9 @@ const PromotionalCarousel = () => {
       try {
         const q = query(collection(db, 'products'), where('isFeatured', '==', true));
         const querySnapshot = await getDocs(q);
-        const products = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        const products = querySnapshot.docs
+          .map(doc => ({ id: doc.id, ...doc.data() }))
+          .filter(p => p.status !== 'sold');
         setFeaturedProducts(products);
       } catch (error) {
         console.error("Error fetching featured products:", error);

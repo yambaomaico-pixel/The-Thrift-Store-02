@@ -12,10 +12,13 @@ const Home = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        // Fetch latest 8 products
-        const q = query(collection(db, 'products'), orderBy('createdAt', 'desc'), limit(8));
+        // Fetch latest products, filter out sold ones, and limit to 8
+        const q = query(collection(db, 'products'), orderBy('createdAt', 'desc'), limit(25));
         const querySnapshot = await getDocs(q);
-        const productsData = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        const productsData = querySnapshot.docs
+          .map(doc => ({ id: doc.id, ...doc.data() }))
+          .filter(p => p.status !== 'sold')
+          .slice(0, 8);
         setProducts(productsData);
       } catch (error) {
         console.error("Error fetching products:", error);

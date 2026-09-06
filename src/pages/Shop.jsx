@@ -29,6 +29,7 @@ const Shop = () => {
 
   // Filtering Logic
   let filteredProducts = products.filter(product => {
+    if (product.status === 'sold') return false;
     if (selectedCategory !== 'All' && product.category !== selectedCategory) return false;
     if (selectedCondition !== 'All' && product.condition !== selectedCondition) return false;
     return true;

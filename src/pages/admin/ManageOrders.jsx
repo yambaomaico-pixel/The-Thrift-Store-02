@@ -28,6 +28,19 @@ const ManageOrders = () => {
     try {
       await updateDoc(doc(db, 'orders', orderId), { status: newStatus });
       setOrders(orders.map(o => o.id === orderId ? { ...o, status: newStatus } : o));
+
+      if (newStatus === 'Delivered') {
+        const order = orders.find(o => o.id === orderId);
+        if (order && order.items) {
+          for (const item of order.items) {
+            try {
+              await updateDoc(doc(db, 'products', item.id), { status: 'sold' });
+            } catch (err) {
+              console.error("Error updating product status:", err);
+            }
+          }
+        }
+      }
     } catch (error) {
       console.error("Error updating order status:", error);
       alert("Failed to update status.");
