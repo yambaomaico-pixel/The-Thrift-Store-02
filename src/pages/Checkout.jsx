@@ -4,6 +4,7 @@ import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { db, storage } from '../lib/firebase';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-hot-toast';
 import Input from '../components/ui/Input';
 import Button from '../components/ui/Button';
 
@@ -16,7 +17,6 @@ const Checkout = () => {
 
   // Form state
   const [paymentMethod, setPaymentMethod] = useState('COD');
-  const [receiptFile, setReceiptFile] = useState(null);
   const [gcashReference, setGcashReference] = useState('');
   const [address, setAddress] = useState(currentUser?.address?.address || '');
   const [city, setCity] = useState(currentUser?.address?.city || '');
@@ -52,19 +52,12 @@ const Checkout = () => {
       let paymentStatus = 'N/A';
 
       if (paymentMethod === 'GCash') {
-        if (!receiptFile || !gcashReference) {
-          alert('Please upload your GCash receipt and enter the reference number.');
+        if (!gcashReference) {
+          toast.error('Please enter the GCash reference number.');
           setPlacingOrder(false);
           return;
         }
 
-        // Upload receipt to Firebase Storage
-        const fileExtension = receiptFile.name.split('.').pop();
-        const fileName = `${currentUser.uid}_${Date.now()}.${fileExtension}`;
-        const storageRef = ref(storage, `receipts/${currentUser.uid}/${fileName}`);
-        
-        await uploadBytes(storageRef, receiptFile);
-        paymentReceiptUrl = await getDownloadURL(storageRef);
         paymentStatus = 'Pending Verification';
       }
 
@@ -90,11 +83,11 @@ const Checkout = () => {
         await deleteDoc(doc(db, `users/${currentUser.uid}/cart`, item.id));
       }
 
-      alert('Order placed successfully!');
+      toast.success('Order placed successfully!');
       navigate('/orders');
     } catch (error) {
       console.error("Error placing order:", error);
-      alert('Failed to place order. Please try again.');
+      toast.error('Failed to place order. Please try again.');
     } finally {
       setPlacingOrder(false);
     }
@@ -169,17 +162,6 @@ const Checkout = () => {
                           required={paymentMethod === 'GCash'}
                           placeholder="e.g. 1002394829302"
                         />
-                        
-                        <div style={{ marginTop: 'var(--spacing-3)' }}>
-                          <label style={{ display: 'block', fontSize: 'var(--font-size-sm)', fontWeight: 500, marginBottom: 'var(--spacing-1)' }}>Upload Payment Receipt</label>
-                          <input 
-                            type="file" 
-                            accept="image/*" 
-                            onChange={(e) => setReceiptFile(e.target.files[0])} 
-                            required={paymentMethod === 'GCash'}
-                            style={{ width: '100%', fontSize: 'var(--font-size-sm)' }}
-                          />
-                        </div>
                       </div>
                     )}
                   </div>

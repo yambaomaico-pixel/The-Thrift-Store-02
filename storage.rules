@@ -26,5 +26,11 @@ service firebase.storage {
       allow read: if true;
       allow write: if isAuthenticated();
     }
+
+    // Receipts
+    match /receipts/{userId}/{allPaths=**} {
+      allow read: if isAuthenticated();
+      allow write: if isAuthenticated() && request.auth.uid == userId;
+    }
   }
 }
