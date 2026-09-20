@@ -118,8 +118,8 @@ const IssueChat = ({ orderId, currentUser, onClose }) => {
                 </span>
                 <div style={{
                   padding: 'var(--spacing-2) var(--spacing-3)',
-                  backgroundColor: isMe ? 'var(--color-primary)' : 'var(--color-surface)',
-                  color: isMe ? 'white' : 'var(--color-text)',
+                  backgroundColor: isMe ? 'var(--color-accent)' : 'var(--color-surface)',
+                  color: isMe ? 'white' : 'var(--color-text-primary)',
                   borderRadius: 'var(--radius-lg)',
                   borderBottomRightRadius: isMe ? '4px' : 'var(--radius-lg)',
                   borderBottomLeftRadius: !isMe ? '4px' : 'var(--radius-lg)',

@@ -178,7 +178,8 @@ const ManageOrders = () => {
                           padding: 'var(--spacing-1) var(--spacing-2)', 
                           borderRadius: 'var(--radius-sm)',
                           border: '1px solid var(--color-border)',
-                          backgroundColor: 'var(--color-bg)'
+                          backgroundColor: 'var(--color-bg)',
+                          color: 'var(--color-text-primary)'
                         }}
                       >
                         <option value="Pending Verification">Pending Verification</option>
@@ -202,7 +203,8 @@ const ManageOrders = () => {
                         padding: 'var(--spacing-1) var(--spacing-2)', 
                         borderRadius: 'var(--radius-sm)',
                         border: '1px solid var(--color-border)',
-                        backgroundColor: 'var(--color-bg)'
+                        backgroundColor: 'var(--color-bg)',
+                        color: 'var(--color-text-primary)'
                       }}
                     >
                       <option value="Pending">Pending</option>
@@ -225,6 +227,7 @@ const ManageOrders = () => {
                           borderRadius: 'var(--radius-sm)',
                           border: '1px solid var(--color-border)',
                           backgroundColor: 'var(--color-bg)',
+                          color: 'var(--color-text-primary)',
                           width: '130px'
                         }}
                       />
