@@ -143,7 +143,7 @@ const Checkout = () => {
                     {paymentMethod === 'GCash' && (
                       <div style={{ marginTop: 'var(--spacing-4)', padding: 'var(--spacing-4)', backgroundColor: 'var(--color-surface)', borderRadius: 'var(--radius-sm)' }}>
                         <p style={{ fontSize: 'var(--font-size-sm)', marginBottom: 'var(--spacing-2)' }}>
-                          Please scan the QR code below using your GCash app and pay <strong>${total.toFixed(2)}</strong>.
+                          Please scan the QR code below using your GCash app and pay <strong>₱{total.toFixed(2)}</strong>.
                         </p>
                         
                         <div style={{ textAlign: 'center', margin: 'var(--spacing-4) 0' }}>
@@ -178,22 +178,22 @@ const Checkout = () => {
               {cartItems.map(item => (
                 <div key={item.id} className="flex justify-between" style={{ fontSize: 'var(--font-size-sm)' }}>
                   <span>{item.quantity}x {item.name}</span>
-                  <span>${(item.price * item.quantity).toFixed(2)}</span>
+                  <span>₱{(item.price * item.quantity).toFixed(2)}</span>
                 </div>
               ))}
             </div>
             <div style={{ borderTop: '1px solid var(--color-border)', paddingTop: 'var(--spacing-4)', marginBottom: 'var(--spacing-6)' }}>
               <div className="flex justify-between mb-2">
                 <span>Subtotal</span>
-                <span>${subtotal.toFixed(2)}</span>
+                <span>₱{subtotal.toFixed(2)}</span>
               </div>
               <div className="flex justify-between mb-2">
                 <span>Shipping</span>
-                <span>${shipping.toFixed(2)}</span>
+                <span>₱{shipping.toFixed(2)}</span>
               </div>
               <div className="flex justify-between mt-4" style={{ fontWeight: 'bold', fontSize: 'var(--font-size-lg)' }}>
                 <span>Total</span>
-                <span style={{ color: 'var(--color-accent)' }}>${total.toFixed(2)}</span>
+                <span style={{ color: 'var(--color-accent)' }}>₱{total.toFixed(2)}</span>
               </div>
             </div>
             <Button type="submit" form="checkout-form" className="w-full" isLoading={placingOrder}>

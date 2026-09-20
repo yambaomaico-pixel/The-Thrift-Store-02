@@ -36,7 +36,7 @@ const Dashboard = () => {
           { label: 'Total Customers', value: totalCustomers.toString() },
           { label: 'Total Products', value: totalProducts.toString() },
           { label: 'Total Orders', value: totalOrders.toString() },
-          { label: 'Total Revenue', value: `$${totalRevenue.toFixed(2)}` },
+          { label: 'Total Revenue', value: `₱${totalRevenue.toFixed(2)}` },
         ]);
 
         // 4. Delivery Issues

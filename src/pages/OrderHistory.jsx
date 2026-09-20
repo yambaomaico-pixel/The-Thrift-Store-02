@@ -139,7 +139,7 @@ const OrderHistory = () => {
                   </div>
                 </div>
                 <div style={{ textAlign: 'right' }}>
-                  <p style={{ fontSize: 'var(--font-size-lg)', fontWeight: 'bold' }}>${order.totalAmount.toFixed(2)}</p>
+                  <p style={{ fontSize: 'var(--font-size-lg)', fontWeight: 'bold' }}>₱{order.totalAmount.toFixed(2)}</p>
                   <span style={{ display: 'inline-block', padding: 'var(--spacing-1) var(--spacing-2)', backgroundColor: 'var(--color-bg)', borderRadius: 'var(--radius-full)', fontSize: 'var(--font-size-xs)', fontWeight: 500, color: 'var(--color-accent)', marginTop: 'var(--spacing-1)' }}>
                     {displayedStatus}
                   </span>

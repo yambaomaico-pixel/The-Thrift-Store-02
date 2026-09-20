@@ -85,7 +85,7 @@ const Cart = () => {
                   <img src={item.image} alt={item.name} style={{ width: '80px', height: '80px', objectFit: 'cover', borderRadius: 'var(--radius-sm)' }} />
                   <div style={{ flex: 1 }}>
                     <h3 style={{ fontWeight: 600 }}><Link to={`/product/${item.id}`}>{item.name}</Link></h3>
-                    <p style={{ color: 'var(--color-text-secondary)', fontSize: 'var(--font-size-sm)' }}>${item.price.toFixed(2)}</p>
+                    <p style={{ color: 'var(--color-text-secondary)', fontSize: 'var(--font-size-sm)' }}>₱{item.price.toFixed(2)}</p>
                   </div>
                   <div className="flex items-center gap-2">
                     <Button variant="outline" style={{ padding: 'var(--spacing-1) var(--spacing-2)' }} onClick={() => handleQuantity(item.id, item.quantity, -1)}>-</Button>
@@ -93,7 +93,7 @@ const Cart = () => {
                     <Button variant="outline" style={{ padding: 'var(--spacing-1) var(--spacing-2)' }} onClick={() => handleQuantity(item.id, item.quantity, 1)}>+</Button>
                   </div>
                   <div style={{ fontWeight: 'bold', width: '80px', textAlign: 'right' }}>
-                    ${(item.price * item.quantity).toFixed(2)}
+                    ₱{(item.price * item.quantity).toFixed(2)}
                   </div>
                   <Button variant="outline" style={{ color: 'var(--color-error)', borderColor: 'var(--color-error)', padding: 'var(--spacing-1) var(--spacing-2)' }} onClick={() => handleRemove(item.id)}>Remove</Button>
                 </div>
@@ -106,15 +106,15 @@ const Cart = () => {
               <h2 style={{ fontSize: 'var(--font-size-xl)', marginBottom: 'var(--spacing-4)' }}>Order Summary</h2>
               <div className="flex justify-between mb-2">
                 <span>Subtotal</span>
-                <span>${subtotal.toFixed(2)}</span>
+                <span>₱{subtotal.toFixed(2)}</span>
               </div>
               <div className="flex justify-between mb-4" style={{ paddingBottom: 'var(--spacing-4)', borderBottom: '1px solid var(--color-border)' }}>
                 <span>Shipping</span>
-                <span>${shipping.toFixed(2)}</span>
+                <span>₱{shipping.toFixed(2)}</span>
               </div>
               <div className="flex justify-between mb-6" style={{ fontWeight: 'bold', fontSize: 'var(--font-size-lg)' }}>
                 <span>Total</span>
-                <span>${total.toFixed(2)}</span>
+                <span>₱{total.toFixed(2)}</span>
               </div>
               <Button className="w-full" onClick={() => navigate('/checkout')}>Proceed to Checkout</Button>
             </div>

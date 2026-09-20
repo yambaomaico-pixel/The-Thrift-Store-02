@@ -193,7 +193,7 @@ const ManageOrders = () => {
                     )}
                   </td>
                   <td style={{ padding: 'var(--spacing-3)', fontWeight: 'bold' }}>
-                    ${order.totalAmount?.toFixed(2)}
+                    ₱{order.totalAmount?.toFixed(2)}
                   </td>
                   <td style={{ padding: 'var(--spacing-3)' }}>
                     <select 

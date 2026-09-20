@@ -64,7 +64,7 @@ const ProductCard = ({ product }) => {
           <h3 style={{ fontSize: 'var(--font-size-lg)', fontWeight: 600, margin: 0 }}>
             <Link to={`/product/${product.id}`}>{product.name}</Link>
           </h3>
-          <span style={{ fontWeight: 'bold', color: 'var(--color-accent)' }}>${product.price?.toFixed(2)}</span>
+          <span style={{ fontWeight: 'bold', color: 'var(--color-accent)' }}>₱{product.price?.toFixed(2)}</span>
         </div>
         <p style={{ color: 'var(--color-text-secondary)', fontSize: 'var(--font-size-sm)', marginBottom: 'var(--spacing-4)', flex: 1 }}>
           {product.brand} &bull; {product.condition}

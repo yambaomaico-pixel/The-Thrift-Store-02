@@ -257,7 +257,7 @@ const Profile = () => {
                       {order.items.slice(0, 2).map((item, idx) => (
                         <div key={idx} className="flex justify-between items-center" style={{ fontSize: 'var(--font-size-sm)', marginBottom: 'var(--spacing-1)' }}>
                           <span>{item.quantity}x {item.name}</span>
-                          <span>${(item.price * item.quantity).toFixed(2)}</span>
+                          <span>₱{(item.price * item.quantity).toFixed(2)}</span>
                         </div>
                       ))}
                       {order.items.length > 2 && (

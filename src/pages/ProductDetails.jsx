@@ -101,7 +101,7 @@ const ProductDetails = () => {
           <div>
             <p style={{ color: 'var(--color-text-secondary)', fontWeight: 600, marginBottom: 'var(--spacing-2)' }}>{product.brand}</p>
             <h1 style={{ fontSize: 'var(--font-size-3xl)', marginBottom: 'var(--spacing-2)' }}>{product.name}</h1>
-            <p style={{ fontSize: 'var(--font-size-2xl)', fontWeight: 'bold', color: 'var(--color-accent)' }}>${product.price?.toFixed(2)}</p>
+            <p style={{ fontSize: 'var(--font-size-2xl)', fontWeight: 'bold', color: 'var(--color-accent)' }}>₱{product.price?.toFixed(2)}</p>
           </div>
 
           <div style={{ display: 'flex', gap: 'var(--spacing-4)', fontSize: 'var(--font-size-sm)', flexWrap: 'wrap' }}>
