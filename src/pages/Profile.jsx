@@ -3,6 +3,7 @@ import { collection, query, where, getDocs, doc, updateDoc } from 'firebase/fire
 import { db } from '../lib/firebase';
 import { useAuth } from '../context/AuthContext';
 import { Link } from 'react-router-dom';
+import IssueChat from '../components/IssueChat';
 import Input from '../components/ui/Input';
 import Button from '../components/ui/Button';
 
@@ -22,6 +23,7 @@ const Profile = () => {
   const [contact, setContact] = useState(currentUser?.phone || '');
   const [orders, setOrders] = useState([]);
   const [ordersLoading, setOrdersLoading] = useState(true);
+  const [activeChatOrderId, setActiveChatOrderId] = useState(null);
 
   useEffect(() => {
     const fetchOrders = async () => {
@@ -87,6 +89,20 @@ const Profile = () => {
     } catch (error) {
       console.error("Error reporting issue:", error);
       alert("Failed to report issue.");
+    }
+  };
+
+  const handleSettleIssue = async (orderId) => {
+    try {
+      await updateDoc(doc(db, 'orders', orderId), {
+        deliveryIssue: false,
+        issueStatus: 'Settled'
+      });
+      setOrders(orders.map(o => o.id === orderId ? { ...o, deliveryIssue: false, issueStatus: 'Settled' } : o));
+      if (activeChatOrderId === orderId) setActiveChatOrderId(null);
+    } catch (error) {
+      console.error("Error settling issue:", error);
+      alert("Failed to settle issue.");
     }
   };
 
@@ -300,14 +316,39 @@ const Profile = () => {
                         </div>
                       )}
 
-                      {order.deliveryIssue && (
+                      {order.deliveryIssue && order.issueStatus !== 'Settled' && (
                         <div style={{ marginTop: 'var(--spacing-3)' }}>
-                          <p style={{ color: 'var(--color-danger)', fontWeight: 500, fontSize: 'var(--font-size-sm)' }}>
+                          <p style={{ color: 'var(--color-danger)', fontWeight: 500, fontSize: 'var(--font-size-sm)', marginBottom: 'var(--spacing-2)' }}>
                             Delivery issue reported. Status: {order.issueStatus}
                           </p>
+                          <div className="flex gap-2">
+                            <button 
+                              onClick={() => setActiveChatOrderId(activeChatOrderId === order.id ? null : order.id)}
+                              className="btn btn-outline"
+                              style={{ padding: '4px 8px', fontSize: 'var(--font-size-xs)' }}
+                            >
+                              {activeChatOrderId === order.id ? 'Close Chat' : 'Chat with Admin'}
+                            </button>
+                            <button 
+                              onClick={() => handleSettleIssue(order.id)}
+                              className="btn btn-primary"
+                              style={{ padding: '4px 8px', fontSize: 'var(--font-size-xs)' }}
+                            >
+                              Mark as Settled
+                            </button>
+                          </div>
                         </div>
                       )}
                     </div>
+                    {activeChatOrderId === order.id && (
+                      <div style={{ marginTop: 'var(--spacing-4)' }}>
+                        <IssueChat 
+                          orderId={order.id} 
+                          currentUser={currentUser} 
+                          onClose={() => setActiveChatOrderId(null)} 
+                        />
+                      </div>
+                    )}
                   </div>
                 )})}
               </div>

@@ -56,6 +56,11 @@ service cloud.firestore {
       allow create: if isAuthenticated() && request.resource.data.userId == request.auth.uid;
       // Only Admins can update/delete orders (e.g. changing status)
       allow update, delete: if isAdmin();
+      
+      // CHATS subcollection for delivery issues
+      match /chats/{chatId} {
+        allow read, write: if isAdmin() || (isAuthenticated() && get(/databases/$(database)/documents/orders/$(orderId)).data.userId == request.auth.uid);
+      }
     }
   }
 }

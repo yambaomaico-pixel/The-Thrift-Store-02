@@ -1,9 +1,13 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { collection, getDocs, updateDoc, doc, orderBy, query } from 'firebase/firestore';
 import { db } from '../../lib/firebase';
 import AdminLayout from '../../components/AdminLayout';
+import { useAuth } from '../../context/AuthContext';
+import IssueChat from '../../components/IssueChat';
 
 const ManageOrders = () => {
+  const { currentUser } = useAuth();
+  const [activeChatOrderId, setActiveChatOrderId] = useState(null);
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -121,9 +125,10 @@ const ManageOrders = () => {
               {orders.map(order => {
                 const deliveryDate = order.estimatedDeliveryDate || order.estimatedArrival;
                 const etaDays = calculateETA(deliveryDate);
-                const hasIssue = order.deliveryIssue && order.issueStatus === 'Pending Review';
+                const hasIssue = order.deliveryIssue && order.issueStatus !== 'Settled';
                 return (
-                <tr key={order.id} style={{ 
+                <React.Fragment key={order.id}>
+                <tr style={{ 
                   borderBottom: '1px solid var(--color-border)',
                   backgroundColor: hasIssue ? 'rgba(239, 68, 68, 0.1)' : 'transparent' 
                 }}>
@@ -132,6 +137,13 @@ const ManageOrders = () => {
                     {hasIssue && (
                       <div style={{ color: 'var(--color-danger)', fontSize: 'var(--font-size-xs)', fontWeight: 'bold', marginTop: '4px' }}>
                         Delivery Issue Reported
+                        <button 
+                          onClick={() => setActiveChatOrderId(activeChatOrderId === order.id ? null : order.id)}
+                          style={{ display: 'block', marginTop: '4px', padding: '2px 6px', fontSize: '10px', cursor: 'pointer', borderColor: 'currentColor', color: 'currentColor' }}
+                          className="btn btn-outline"
+                        >
+                          {activeChatOrderId === order.id ? 'Close Chat' : 'Open Chat'}
+                        </button>
                       </div>
                     )}
                   </td>
@@ -224,6 +236,18 @@ const ManageOrders = () => {
                     </div>
                   </td>
                 </tr>
+                {activeChatOrderId === order.id && (
+                  <tr>
+                    <td colSpan="8" style={{ padding: 'var(--spacing-4)', backgroundColor: 'var(--color-surface)' }}>
+                      <IssueChat 
+                        orderId={order.id} 
+                        currentUser={currentUser} 
+                        onClose={() => setActiveChatOrderId(null)}
+                      />
+                    </td>
+                  </tr>
+                )}
+                </React.Fragment>
                 );
               })}
             </tbody>
