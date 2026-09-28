@@ -12,13 +12,13 @@ const Home = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        // Fetch latest products, filter out sold ones, and limit to 8
+        // Fetch latest products, filter out sold ones, and limit to 12
         const q = query(collection(db, 'products'), orderBy('createdAt', 'desc'), limit(25));
         const querySnapshot = await getDocs(q);
         const productsData = querySnapshot.docs
           .map(doc => ({ id: doc.id, ...doc.data() }))
           .filter(p => p.status !== 'sold')
-          .slice(0, 8);
+          .slice(0, 12);
         setProducts(productsData);
       } catch (error) {
         console.error("Error fetching products:", error);
@@ -40,9 +40,9 @@ const Home = () => {
         {loading ? (
           <div style={{ textAlign: 'center', padding: 'var(--spacing-8)' }}>Loading products...</div>
         ) : (
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--spacing-6)', justifyContent: 'center' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(6, 1fr)', gap: 'var(--spacing-4)' }}>
             {products.map(product => (
-              <div key={product.id} style={{ width: '250px', flexGrow: 0, flexShrink: 0 }}>
+              <div key={product.id}>
                 <ProductCard product={product} />
               </div>
             ))}
