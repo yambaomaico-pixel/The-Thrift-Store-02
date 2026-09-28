@@ -7,7 +7,9 @@ const Button = ({
   ...props 
 }) => {
   const baseClass = 'btn';
-  const variantClass = variant === 'primary' ? 'btn-primary' : variant === 'outline' ? 'btn-outline' : '';
+  const variantClass = variant === 'primary' ? 'btn-primary' : 
+                       variant === 'outline' ? 'btn-outline' : 
+                       variant === 'google' ? 'btn-google' : '';
   
   return (
     <button 

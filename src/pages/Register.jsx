@@ -97,8 +97,8 @@ const Register = () => {
 
         <Button 
           type="button" 
-          variant="outline" 
-          className="w-full flex items-center justify-center gap-2" 
+          variant="google" 
+          className="w-full flex items-center justify-center gap-3 py-2" 
           onClick={handleGoogleSignIn}
           disabled={loading}
         >

@@ -150,6 +150,23 @@ ul, ol {
   border-color: var(--color-text-secondary);
 }
 
+.btn-google {
+  background-color: #ffffff;
+  color: #3c4043;
+  border: 1px solid #dadce0;
+  border-radius: 4px;
+  font-family: 'Roboto', 'Segoe UI', arial, sans-serif;
+  font-weight: 500;
+  font-size: 15px;
+  letter-spacing: 0.25px;
+}
+
+.btn-google:hover {
+  background-color: #f8f9fa;
+  box-shadow: 0 1px 2px 0 rgba(60,64,67,0.3), 0 1px 3px 1px rgba(60,64,67,0.15);
+  border-color: #dadce0;
+}
+
 .input {
   width: 100%;
   padding: var(--spacing-2) var(--spacing-3);
