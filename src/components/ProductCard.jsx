@@ -52,21 +52,21 @@ const ProductCard = ({ product }) => {
 
   return (
     <div className="card flex flex-col h-full">
-      <Link to={`/product/${product.id}`} style={{ display: 'block', position: 'relative', paddingTop: '133%', overflow: 'hidden' }}>
+      <Link to={`/product/${product.id}`} className="card-image-container">
         <img
           src={product.images?.[0] || 'https://via.placeholder.com/300x400?text=No+Image'}
           alt={product.name}
-          style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', objectFit: 'cover' }}
+          className="card-image"
         />
       </Link>
-      <div className="flex flex-col flex-1" style={{ padding: 'var(--spacing-4)' }}>
+      <div className="card-content">
         <div className="flex justify-between items-start mb-2">
-          <h3 style={{ fontSize: 'var(--font-size-lg)', fontWeight: 600, margin: 0 }}>
+          <h3 className="card-title">
             <Link to={`/product/${product.id}`}>{product.name}</Link>
           </h3>
-          <span style={{ fontWeight: 'bold', color: 'var(--color-accent)' }}>₱{product.price?.toFixed(2)}</span>
+          <span className="card-price">₱{product.price?.toFixed(2)}</span>
         </div>
-        <p style={{ color: 'var(--color-text-secondary)', fontSize: 'var(--font-size-sm)', marginBottom: 'var(--spacing-4)', flex: 1 }}>
+        <p className="card-meta">
           {product.brand} &bull; {product.condition}
         </p>
         <Button variant="primary" className="w-full" onClick={handleAddToCart}>Add to Cart</Button>

@@ -19,45 +19,35 @@ const Navbar = () => {
   };
 
   return (
-    <nav style={{ padding: 'var(--spacing-4)', borderBottom: '1px solid var(--color-border)', backgroundColor: 'var(--color-surface)', position: 'sticky', top: 0, zIndex: 50 }}>
+    <nav className="navbar">
       <div className="container flex justify-between items-center">
-        <Link to="/" style={{ fontWeight: 'bold', fontSize: 'var(--font-size-xl)', color: 'var(--color-accent)' }}>ThriftStore.</Link>
+        <Link to="/" className="nav-brand">ThriftStore.</Link>
         <div className="flex gap-4 items-center">
-          <Link to="/shop" style={{ fontWeight: 500 }}>Shop</Link>
+          <Link to="/shop" className="font-medium">Shop</Link>
           
           {currentUser ? (
             <>
               {currentUser.role === 'admin' && (
-                <Link to="/admin" style={{ fontWeight: 500, color: 'var(--color-warning)' }}>Admin</Link>
+                <Link to="/admin" className="font-bold" style={{ color: 'var(--color-warning)' }}>Admin</Link>
               )}
-              <Link to="/cart" style={{ fontWeight: 500 }}>Cart</Link>
-              <Link to="/profile" style={{ fontWeight: 500 }}>Profile</Link>
-              <Button variant="outline" onClick={handleLogout} style={{ padding: 'var(--spacing-1) var(--spacing-3)', fontSize: 'var(--font-size-sm)' }}>Logout</Button>
+              <Link to="/cart" className="font-medium">Cart</Link>
+              <Link to="/profile" className="font-medium">Profile</Link>
+              <Button variant="outline" onClick={handleLogout} style={{ padding: 'var(--spacing-1) var(--spacing-4)' }}>Logout</Button>
             </>
           ) : (
             <>
-              <Link to="/cart" style={{ fontWeight: 500 }}>Cart</Link>
+              <Link to="/cart" className="font-medium">Cart</Link>
               <Link to="/login">
-                <Button variant="primary" style={{ padding: 'var(--spacing-1) var(--spacing-4)', fontSize: 'var(--font-size-sm)' }}>Login</Button>
+                <Button variant="primary">Login</Button>
               </Link>
             </>
           )}
           <button 
             onClick={toggleTheme} 
-            style={{ 
-              display: 'flex', 
-              alignItems: 'center', 
-              justifyContent: 'center', 
-              padding: 'var(--spacing-2)', 
-              borderRadius: '50%',
-              backgroundColor: 'var(--color-surface)',
-              color: 'var(--color-text-primary)',
-              border: '1px solid var(--color-border)',
-              marginLeft: 'var(--spacing-2)'
-            }}
+            className="theme-toggle"
             aria-label="Toggle Dark Mode"
           >
-            {theme === 'dark' ? <FiSun size={18} /> : <FiMoon size={18} />}
+            {theme === 'dark' ? <FiSun size={20} /> : <FiMoon size={20} />}
           </button>
         </div>
       </div>
