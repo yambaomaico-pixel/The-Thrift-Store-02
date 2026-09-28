@@ -5,7 +5,9 @@ import {
   signOut, 
   onAuthStateChanged,
   sendPasswordResetEmail,
-  updatePassword as firebaseUpdatePassword
+  updatePassword as firebaseUpdatePassword,
+  GoogleAuthProvider,
+  signInWithPopup
 } from 'firebase/auth';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
 import { auth, db } from '../lib/firebase';
@@ -61,6 +63,31 @@ export const AuthProvider = ({ children }) => {
     return firebaseUpdatePassword(auth.currentUser, password);
   };
 
+  // Google Login
+  const loginWithGoogle = async () => {
+    const provider = new GoogleAuthProvider();
+    const userCredential = await signInWithPopup(auth, provider);
+    const user = userCredential.user;
+    
+    // Check if user exists in Firestore, if not create doc
+    const userDocRef = doc(db, 'users', user.uid);
+    const userDoc = await getDoc(userDocRef);
+    
+    if (!userDoc.exists()) {
+      await setDoc(userDocRef, {
+        uid: user.uid,
+        email: user.email,
+        fullName: user.displayName || 'Google User',
+        role: 'customer',
+        createdAt: new Date(),
+        phone: '',
+        address: {},
+        profileImage: user.photoURL || ''
+      });
+    }
+    return userCredential;
+  };
+
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user) {
@@ -92,7 +119,8 @@ export const AuthProvider = ({ children }) => {
     login,
     logout,
     resetPassword,
-    updatePassword
+    updatePassword,
+    loginWithGoogle
   };
 
   return (
