@@ -77,7 +77,7 @@ const Login = () => {
         <Button 
           type="button" 
           variant="google" 
-          className="w-full flex items-center justify-center gap-2 py-1.5 text-sm" 
+          className="flex items-center justify-center gap-2" 
           onClick={handleGoogleSignIn}
           disabled={loading}
         >

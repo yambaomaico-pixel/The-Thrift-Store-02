@@ -157,8 +157,11 @@ ul, ol {
   border-radius: 4px;
   font-family: 'Roboto', 'Segoe UI', arial, sans-serif;
   font-weight: 500;
-  font-size: 15px;
+  font-size: 14px;
   letter-spacing: 0.25px;
+  padding: 6px 16px;
+  width: fit-content;
+  margin: 0 auto;
 }
 
 .btn-google:hover {
