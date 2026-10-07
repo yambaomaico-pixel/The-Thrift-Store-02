@@ -24,8 +24,16 @@ const Footer = () => {
           </div>
         </div>
 
+        {/* Security & Privacy Column */}
+        <div className="flex-1 max-w-xs">
+          <h3 className="font-bold text-xs uppercase tracking-wider text-slate-800 mb-4">SECURITY & PRIVACY</h3>
+          <p className="text-sm text-slate-500 leading-relaxed">
+            This application requires secure login via Google Auth. All uploaded content is scanned and moderated in compliance with firestore security controls.
+          </p>
+        </div>
+
         {/* Navigation Column */}
-        <div className="flex-1">
+        <div className="flex-1 md:text-right">
           <h3 className="font-bold text-xs uppercase tracking-wider text-slate-800 mb-4">NAVIGATION</h3>
           <ul className="flex flex-col gap-3 text-sm text-slate-500">
             <li><Link to="/" className="hover:text-blue-600 transition-colors">Home</Link></li>
@@ -33,14 +41,6 @@ const Footer = () => {
             <li><Link to="/contact" className="hover:text-blue-600 transition-colors">Contact Us</Link></li>
             <li><Link to="/login" className="hover:text-blue-600 transition-colors">Login / Register</Link></li>
           </ul>
-        </div>
-
-        {/* Security & Privacy Column */}
-        <div className="flex-1 max-w-xs">
-          <h3 className="font-bold text-xs uppercase tracking-wider text-slate-800 mb-4">SECURITY & PRIVACY</h3>
-          <p className="text-sm text-slate-500 leading-relaxed">
-            This application requires secure login via Google Auth. All uploaded content is scanned and moderated in compliance with firestore security controls.
-          </p>
         </div>
       </div>
 
