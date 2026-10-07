@@ -6,6 +6,14 @@
   padding: 0 4%;
 }
 
+.social-icon {
+  transition: color 0.2s ease;
+  color: var(--color-text-secondary);
+}
+.social-icon:hover {
+  color: var(--color-accent);
+}
+
 @media (min-width: 768px) {
   .custom-footer-container {
     flex-direction: row;
