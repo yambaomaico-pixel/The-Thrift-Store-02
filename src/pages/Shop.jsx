@@ -111,9 +111,9 @@ const Shop = () => {
         {loading ? (
           <div>Loading products...</div>
         ) : (
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--spacing-6)' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: 'var(--spacing-6)', width: '100%' }}>
             {filteredProducts.map(product => (
-              <div key={product.id} style={{ width: '250px', flexGrow: 0, flexShrink: 0 }}>
+              <div key={product.id}>
                 <ProductCard product={product} />
               </div>
             ))}

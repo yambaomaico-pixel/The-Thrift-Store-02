@@ -54,7 +54,7 @@ const Home = () => {
           {loading ? (
             <div style={{ textAlign: 'center', padding: 'var(--spacing-8)' }}>Loading products...</div>
           ) : (
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: 'var(--spacing-6)' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 'var(--spacing-6)' }}>
               {products.map(product => (
                 <div key={product.id}>
                   <ProductCard product={product} />
