@@ -16,7 +16,7 @@ const Footer = () => {
         {/* Brand Column */}
         <div className="custom-footer-col custom-footer-brand">
           <div style={{ marginBottom: 'var(--spacing-4)' }}>
-            <img src={logoUrl} alt="The Thrift Store" style={{ height: '70px', width: 'auto' }} />
+            <img src={logoUrl} alt="The Thrift Store" style={{ height: '140px', width: 'auto' }} />
           </div>
           <p style={{ color: 'var(--color-text-secondary)', fontSize: 'var(--font-size-sm)', lineHeight: '1.6', marginBottom: 'var(--spacing-6)' }}>
             A curated collection of pre-loved items looking for a new home. Sustainable, affordable, and stylish.
