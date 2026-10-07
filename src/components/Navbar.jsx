@@ -4,6 +4,8 @@ import { useTheme } from '../context/ThemeContext';
 import Button from './ui/Button';
 import { FiSun, FiMoon } from 'react-icons/fi';
 
+import logoUrl from '../assets/logo.png';
+
 const Navbar = () => {
   const { currentUser, logout } = useAuth();
   const { theme, toggleTheme } = useTheme();
@@ -21,7 +23,9 @@ const Navbar = () => {
   return (
     <nav className="navbar">
       <div className="container flex justify-between items-center">
-        <Link to="/" className="nav-brand">ThriftStore.</Link>
+        <Link to="/" className="nav-brand" style={{ display: 'flex', alignItems: 'center' }}>
+          <img src={logoUrl} alt="The Thrift Store" style={{ height: '45px', width: 'auto' }} />
+        </Link>
         <div className="flex gap-4 items-center">
           <Link to="/shop" className="font-medium">Shop</Link>
           
