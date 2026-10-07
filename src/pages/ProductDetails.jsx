@@ -21,7 +21,25 @@ const ProductDetails = () => {
         const docSnap = await getDoc(docRef);
         
         if (docSnap.exists()) {
-          setProduct({ id: docSnap.id, ...docSnap.data() });
+          const productData = docSnap.data();
+          setProduct({ id: docSnap.id, ...productData });
+          
+          // Track recently viewed
+          if (currentUser) {
+            try {
+              const viewedRef = doc(db, `users/${currentUser.uid}/recentlyViewed`, docSnap.id);
+              await setDoc(viewedRef, {
+                id: docSnap.id,
+                name: productData.name,
+                price: productData.price,
+                image: productData.images?.[0] || 'https://via.placeholder.com/80',
+                brand: productData.brand || '',
+                viewedAt: new Date()
+              });
+            } catch (err) {
+              console.error("Error saving recently viewed", err);
+            }
+          }
         } else {
           console.log("No such product!");
           navigate('/shop');
@@ -33,7 +51,7 @@ const ProductDetails = () => {
       }
     };
     fetchProduct();
-  }, [id, navigate]);
+  }, [id, navigate, currentUser]);
 
   const handleAddToCart = async (e) => {
     e?.preventDefault();

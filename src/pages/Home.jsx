@@ -4,6 +4,7 @@ import { db } from '../lib/firebase';
 import ProductCard from '../components/ProductCard';
 import { Link } from 'react-router-dom';
 import PromotionalCarousel from '../components/PromotionalCarousel';
+import RecentlyViewed from '../components/RecentlyViewed';
 
 const Home = () => {
   const [products, setProducts] = useState([]);
@@ -33,24 +34,39 @@ const Home = () => {
     <div>
       <PromotionalCarousel />
 
-      {/* Featured Products */}
-      <section className="container" style={{ padding: 'var(--spacing-12) 0' }}>
-        <h2 style={{ fontSize: 'var(--font-size-2xl)', marginBottom: 'var(--spacing-8)', textAlign: 'center' }}>New Arrivals</h2>
+      {/* Main Content Area */}
+      <section className="container" style={{ 
+        padding: 'var(--spacing-12) 0', 
+        display: 'flex', 
+        flexWrap: 'wrap', 
+        gap: 'var(--spacing-8)' 
+      }}>
         
-        {loading ? (
-          <div style={{ textAlign: 'center', padding: 'var(--spacing-8)' }}>Loading products...</div>
-        ) : (
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(6, 1fr)', gap: 'var(--spacing-4)' }}>
-            {products.map(product => (
-              <div key={product.id}>
-                <ProductCard product={product} />
-              </div>
-            ))}
-            {products.length === 0 && (
-              <p style={{ width: '100%', textAlign: 'center', color: 'var(--color-text-secondary)' }}>No products found. Admin needs to add some!</p>
-            )}
-          </div>
-        )}
+        {/* Left Sidebar: Recently Viewed */}
+        <aside style={{ flex: '1 1 300px', maxWidth: '350px' }}>
+          <RecentlyViewed />
+        </aside>
+
+        {/* Right Content: New Arrivals */}
+        <main style={{ flex: '3 1 600px', minWidth: 0 }}>
+          <h2 style={{ fontSize: 'var(--font-size-2xl)', marginBottom: 'var(--spacing-8)', textAlign: 'left', fontWeight: 'bold' }}>New Arrivals</h2>
+          
+          {loading ? (
+            <div style={{ textAlign: 'center', padding: 'var(--spacing-8)' }}>Loading products...</div>
+          ) : (
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: 'var(--spacing-6)' }}>
+              {products.map(product => (
+                <div key={product.id}>
+                  <ProductCard product={product} />
+                </div>
+              ))}
+              {products.length === 0 && (
+                <p style={{ width: '100%', textAlign: 'center', color: 'var(--color-text-secondary)' }}>No products found. Admin needs to add some!</p>
+              )}
+            </div>
+          )}
+        </main>
+
       </section>
     </div>
   );
