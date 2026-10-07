@@ -376,7 +376,7 @@ ol {
   position: relative;
   width: 100%;
   overflow: hidden;
-  background: linear-gradient(135deg, var(--color-accent-light) 0%, #fdf8f6 100%);
+  background: linear-gradient(135deg, var(--color-accent-light) 0%, var(--color-bg) 100%);
   border-bottom: none;
   min-height: 450px;
   border-radius: var(--radius-xl);
@@ -384,7 +384,7 @@ ol {
 }
 
 [data-theme='dark'] .promo-carousel-container {
-  background: linear-gradient(135deg, #1e1b4b 0%, #0f172a 100%);
+  background: linear-gradient(135deg, var(--color-surface) 0%, var(--color-bg) 100%);
 }
 
 .promo-carousel-inner {
