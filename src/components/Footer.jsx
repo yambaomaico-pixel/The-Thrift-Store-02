@@ -1,22 +1,19 @@
 import { Link } from 'react-router-dom';
 import { FaFacebook, FaInstagram, FaGithub, FaBoxOpen } from 'react-icons/fa';
+import './Footer.css';
 
 const Footer = () => {
   return (
     <footer style={{ 
       backgroundColor: 'var(--color-surface)', 
       borderTop: '1px solid var(--color-border)', 
-      padding: 'var(--spacing-12) var(--spacing-10)', 
-      marginTop: 'auto' 
+      padding: 'var(--spacing-12) var(--spacing-6)', 
+      marginTop: 'auto',
+      width: '100%'
     }}>
-      <div style={{ 
-        display: 'flex', 
-        flexWrap: 'wrap', 
-        justifyContent: 'space-between', 
-        gap: 'var(--spacing-12)' 
-      }}>
+      <div className="custom-footer-container">
         {/* Brand Column */}
-        <div style={{ flex: '1 1 300px', maxWidth: '400px' }}>
+        <div className="custom-footer-col custom-footer-brand">
           <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-2)', fontWeight: 'bold', fontSize: 'var(--font-size-xl)', marginBottom: 'var(--spacing-4)' }}>
             <FaBoxOpen style={{ color: 'var(--color-accent)' }} size={24} />
             <span>The Thrift Store</span>
@@ -35,15 +32,15 @@ const Footer = () => {
         </div>
 
         {/* Security & Privacy Column */}
-        <div style={{ flex: '1 1 250px', maxWidth: '300px' }}>
+        <div className="custom-footer-col">
           <h3 style={{ fontWeight: 'bold', fontSize: 'var(--font-size-xs)', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: 'var(--spacing-4)' }}>SECURITY & PRIVACY</h3>
-          <p style={{ color: 'var(--color-text-secondary)', fontSize: 'var(--font-size-sm)', lineHeight: '1.6' }}>
+          <p style={{ color: 'var(--color-text-secondary)', fontSize: 'var(--font-size-sm)', lineHeight: '1.6', maxWidth: '300px' }}>
             This application requires secure login via Google Auth. All uploaded content is scanned and moderated in compliance with firestore security controls.
           </p>
         </div>
 
         {/* Navigation Column */}
-        <div style={{ flex: '1 1 200px', textAlign: 'right' }}>
+        <div className="custom-footer-col custom-footer-nav">
           <h3 style={{ fontWeight: 'bold', fontSize: 'var(--font-size-xs)', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: 'var(--spacing-4)' }}>NAVIGATION</h3>
           <ul style={{ display: 'flex', flexDirection: 'column', gap: 'var(--spacing-2)', color: 'var(--color-text-secondary)', fontSize: 'var(--font-size-sm)', listStyle: 'none', padding: 0, margin: 0 }}>
             <li><Link to="/">Home</Link></li>
@@ -55,16 +52,7 @@ const Footer = () => {
       </div>
 
       {/* Bottom Bar */}
-      <div style={{ 
-        display: 'flex', 
-        flexWrap: 'wrap', 
-        justifyContent: 'space-between', 
-        alignItems: 'center',
-        marginTop: 'var(--spacing-12)', 
-        paddingTop: 'var(--spacing-6)', 
-        borderTop: '1px solid var(--color-border)',
-        gap: 'var(--spacing-4)'
-      }}>
+      <div className="custom-footer-bottom">
         <p style={{ color: 'var(--color-text-secondary)', fontSize: 'var(--font-size-xs)' }}>
           © 2026 The Thrift Store. All rights reserved.
         </p>
