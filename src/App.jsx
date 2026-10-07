@@ -1,5 +1,6 @@
 import { HashRouter as Router, Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar';
+import Footer from './components/Footer';
 import Home from './pages/Home';
 import Shop from './pages/Shop';
 import ProductDetails from './pages/ProductDetails';
@@ -52,6 +53,7 @@ function App() {
                 </Route>
               </Routes>
             </main>
+            <Footer />
           </div>
         </Router>
       </AuthProvider>
