@@ -35,8 +35,8 @@ const Home = () => {
       <PromotionalCarousel />
 
       {/* Main Content Area */}
-      <section className="container" style={{ 
-        padding: 'var(--spacing-12) 0', 
+      <section style={{ 
+        padding: 'var(--spacing-12) 4%', 
         display: 'flex', 
         flexWrap: 'wrap', 
         gap: 'var(--spacing-8)' 

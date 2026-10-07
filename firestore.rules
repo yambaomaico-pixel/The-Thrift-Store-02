@@ -40,6 +40,11 @@ service cloud.firestore {
       match /wishlist/{productId} {
         allow read, write: if isOwner(userId);
       }
+      
+      // RECENTLY VIEWED subcollection
+      match /recentlyViewed/{productId} {
+        allow read, write: if isOwner(userId);
+      }
     }
 
     // PRODUCTS collection
