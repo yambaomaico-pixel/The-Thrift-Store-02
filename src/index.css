@@ -77,6 +77,10 @@
   --shadow-hover: 0 20px 40px -10px rgba(56, 189, 248, 0.3);
 }
 
+[data-theme='dark'] .theme-logo {
+  filter: brightness(0) invert(1);
+}
+
 * {
   box-sizing: border-box;
   margin: 0;

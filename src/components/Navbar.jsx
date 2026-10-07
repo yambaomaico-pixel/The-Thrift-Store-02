@@ -24,7 +24,7 @@ const Navbar = () => {
     <nav className="navbar">
       <div className="container flex justify-between items-center">
         <Link to="/" className="nav-brand" style={{ display: 'flex', alignItems: 'center' }}>
-          <img src={logoUrl} alt="The Thrift Store" style={{ height: '80px', width: 'auto' }} />
+          <img src={logoUrl} alt="The Thrift Store" className="theme-logo" style={{ height: '80px', width: 'auto' }} />
         </Link>
         <div className="flex gap-4 items-center">
           <Link to="/shop" className="font-medium">Shop</Link>
