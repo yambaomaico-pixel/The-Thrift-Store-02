@@ -6,10 +6,10 @@ const Footer = () => {
     <footer style={{ 
       backgroundColor: 'var(--color-surface)', 
       borderTop: '1px solid var(--color-border)', 
-      padding: 'var(--spacing-12) 0', 
+      padding: 'var(--spacing-12) var(--spacing-10)', 
       marginTop: 'auto' 
     }}>
-      <div className="container" style={{ 
+      <div style={{ 
         display: 'flex', 
         flexWrap: 'wrap', 
         justifyContent: 'space-between', 
@@ -55,7 +55,7 @@ const Footer = () => {
       </div>
 
       {/* Bottom Bar */}
-      <div className="container" style={{ 
+      <div style={{ 
         display: 'flex', 
         flexWrap: 'wrap', 
         justifyContent: 'space-between', 
